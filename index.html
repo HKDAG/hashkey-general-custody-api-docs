@@ -570,7 +570,7 @@
 <p>For security purpose, it is strongly recommended that you bind an IP address or IP segment to the API Key.</p>
 
 <p><strong>Warning:</strong> API Key/Secret is closely related to the security of your account and should not be disclosed to anyone at any time. API Key/Secret disclosure may result in the loss of your assets (even if you do not enable access to withdrawals). Please delete the API Key/Secret as soon as you discover it has been compromised.</p>
-<h2 id='address'>Address</h2><h3 id='get-the-latest-address'>get the latest address</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"GetAddress"</span> <span class="s2">"ETH"</span>
+<h2 id='address'>Address</h2><h3 id='get-the-latest-address'>get the latest address</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"GetAddress"</span> <span class="s2">"ETH"</span> <span class="s2">"USDT"</span>
 code: 0
 message: success
 data:
@@ -579,18 +579,18 @@ data:
   <span class="s2">"mode"</span>: <span class="s2">"deposit"</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">getAddress</span><span class="p">(</span><span class="dl">"</span><span class="s2">ETH</span><span class="dl">"</span><span class="p">)</span>
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">getAddress</span><span class="p">(</span><span class="dl">"</span><span class="s2">ETH</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">USDT</span><span class="dl">"</span><span class="p">)</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// do something</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">response</span><span class="p">)</span>
     <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">app</span><span class="o">.</span><span class="n">GetAddress</span><span class="p">(</span><span class="s">"ETH"</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">getAddress</span><span class="o">(</span><span class="s">"ETH"</span><span class="o">);</span>
+</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">app</span><span class="o">.</span><span class="n">GetAddress</span><span class="p">(</span><span class="s">"ETH"</span><span class="p">,</span> <span class="s">"USDT"</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">getAddress</span><span class="o">(</span><span class="s">"ETH"</span><span class="o">,</span> <span class="s">"USDT"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get the latest address, create if not exist</p>
 <h4 id='http-request'>HTTP Request</h4>
-<p><code>GET /api/v1/address/{coinName}</code> </p>
+<p><code>GET /api/v1/address/{networkType}/{coinName}</code> </p>
 
 <p><strong>Parameters</strong></p>
 
@@ -607,6 +607,13 @@ data:
 <td>X-App-Key</td>
 <td>header</td>
 <td>app key</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>networkType</td>
+<td>path</td>
+<td>networkType</td>
 <td>Yes</td>
 <td>string</td>
 </tr>
@@ -639,7 +646,7 @@ data:
 <td>address mode</td>
 </tr>
 </tbody></table>
-<h3 id='create-a-new-address'>create a new address</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"CreateAddress"</span> <span class="s2">"ETH"</span>
+<h3 id='create-a-new-address'>create a new address</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"CreateAddress"</span> <span class="s2">"ETH"</span> <span class="s2">"USDT"</span>
 code: 0
 message: success
 data:
@@ -648,18 +655,18 @@ data:
   <span class="s2">"mode"</span>: <span class="s2">"deposit"</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">createAddress</span><span class="p">(</span><span class="dl">"</span><span class="s2">ETH</span><span class="dl">"</span><span class="p">)</span>
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">createAddress</span><span class="p">(</span><span class="dl">"</span><span class="s2">ETH</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">USDT</span><span class="dl">"</span><span class="p">)</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
     <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// do something</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">response</span><span class="p">)</span>
     <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">app</span><span class="o">.</span><span class="n">CreateAddress</span><span class="p">(</span><span class="s">"ETH"</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">createAddress</span><span class="o">(</span><span class="s">"ETH"</span><span class="o">);</span>
+</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">app</span><span class="o">.</span><span class="n">CreateAddress</span><span class="p">(</span><span class="s">"ETH"</span><span class="p">,</span> <span class="s">"USDT"</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">createAddress</span><span class="o">(</span><span class="s">"ETH"</span><span class="o">,</span> <span class="s">"USDT"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> create a new address</p>
 <h4 id='http-request-2'>HTTP Request</h4>
-<p><code>POST /api/v1/address/{coinName}/new</code> </p>
+<p><code>POST /api/v1/address/{networkType}/{coinName}/new</code> </p>
 
 <p><strong>Parameters</strong></p>
 
@@ -680,17 +687,17 @@ data:
 <td>string</td>
 </tr>
 <tr>
-<td>coinName</td>
+<td>networkType</td>
 <td>path</td>
-<td>coinName</td>
+<td>networkType</td>
 <td>Yes</td>
 <td>string</td>
 </tr>
 <tr>
-<td>mode</td>
-<td>body</td>
-<td>mode</td>
-<td>No</td>
+<td>coinName</td>
+<td>path</td>
+<td>coinName</td>
+<td>Yes</td>
 <td>string</td>
 </tr>
 </tbody></table>
@@ -720,9 +727,10 @@ code: 0
 message: success
 data:
 <span class="o">{</span>
-  <span class="s2">"assets"</span>: <span class="o">[</span>
-    <span class="s2">"ETH"</span>
-  <span class="o">]</span>
+  <span class="s2">"assets"</span>: <span class="o">[{</span>
+    <span class="s2">"network"</span>: <span class="s2">"ETH"</span>,
+    <span class="s2">"coin"</span>: <span class="s2">"USDT"</span>
+  <span class="o">}]</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
         <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">getAllAssets</span><span class="p">()</span>
@@ -1025,7 +1033,7 @@ data:
   <span class="s2">"orders"</span>: <span class="o">[{</span>
     <span class="s2">"bizType"</span>: <span class="s2">"WITHDRAW"</span>,
     <span class="s2">"block"</span>: 12970670,
-    <span class="s2">"coinName"</span>: <span class="s2">"ETH"</span>,
+    <span class="s2">"coinName"</span>: <span class="s2">"USDT"</span>,
     <span class="s2">"confirmations"</span>: 21,
     <span class="s2">"fee"</span>: <span class="s2">"0.005000000000000000"</span>,
     <span class="s2">"from"</span>: <span class="s2">"0xdedc1eca923cc1227c20571030146d8a01b70774"</span>,
@@ -1201,7 +1209,7 @@ data:
 <tr>
 <td>type</td>
 <td>string</td>
-<td>token type</td>
+<td>network type</td>
 </tr>
 <tr>
 <td>value</td>
@@ -1224,11 +1232,6 @@ data:
 <td>unix timestamp, seconds</td>
 </tr>
 <tr>
-<td>finalizedAt</td>
-<td>number</td>
-<td>unix timestamp, seconds</td>
-</tr>
-<tr>
 <td>relatedOrderId</td>
 <td>string</td>
 <td>related order id</td>
@@ -1241,7 +1244,7 @@ data:
 <span class="o">{</span>
   <span class="s2">"bizType"</span>: <span class="s2">"WITHDRAW"</span>,
   <span class="s2">"block"</span>: 12970670,
-  <span class="s2">"coinName"</span>: <span class="s2">"ETH"</span>,
+  <span class="s2">"coinName"</span>: <span class="s2">"USDT"</span>,
   <span class="s2">"confirmations"</span>: 21,
   <span class="s2">"fee"</span>: <span class="s2">"0.005000000000000000"</span>,
   <span class="s2">"from"</span>: <span class="s2">"0xdedc1eca923cc1227c20571030146d8a01b70774"</span>,
@@ -1256,7 +1259,6 @@ data:
   <span class="s2">"note"</span>: <span class="s2">"note"</span>,
   <span class="s2">"message"</span>: <span class="s2">""</span>,
   <span class="s2">"createdAt"</span>: 1569306519,
-  <span class="s2">"finalizedAt"</span>: 1569306519,
   <span class="s2">"relatedOrderId"</span>: <span class="s2">"orderrNXBQGJlw09apVyg4nDo"</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
@@ -1372,7 +1374,7 @@ data:
 <tr>
 <td>type</td>
 <td>string</td>
-<td>token type</td>
+<td>network type</td>
 </tr>
 <tr>
 <td>value</td>
@@ -1391,11 +1393,6 @@ data:
 </tr>
 <tr>
 <td>createdAt</td>
-<td>number</td>
-<td>unix timestamp, seconds</td>
-</tr>
-<tr>
-<td>finalizedAt</td>
 <td>number</td>
 <td>unix timestamp, seconds</td>
 </tr>
@@ -1890,7 +1887,7 @@ data:
 <p>For security purpose, it is strongly recommended that you bind an IP address or IP segment to the API Key.</p>
 
 <p><strong>Warning:</strong> API Key/Secret is closely related to the security of your account and should not be disclosed to anyone at any time. Please delete the API Key/Secret as soon as you discover it has been compromised.</p>
-<h2 id='wallet-2'>Wallet</h2><h3 id='create'>create</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"teamkey"</span> <span class="s2">"teamsecret"</span> <span class="s2">"CreateWallet"</span> <span class="s2">"name"</span> <span class="s2">"password"</span> <span class="s2">"https://noti.domain/callback"</span>
+<h2 id='wallet-2'>Wallet</h2><h3 id='create'>create</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"teamkey"</span> <span class="s2">"teamsecret"</span> <span class="s2">"CreateWallet"</span> <span class="s2">"name"</span> <span class="s2">""</span> <span class="s2">"https://noti.domain/callback"</span>
 code: 0
 message: success
 data:
@@ -1900,8 +1897,8 @@ data:
   <span class="s2">"appSecret"</span>: <span class="s2">"4d6718b405cb55e5544ba0b343472acba8a5a1eb0c5777e4040b38f9edd96a60"</span>,
   <span class="s2">"encryptedAppSecret"</span>: <span class="s2">"7p128MoVWgSFI7AYAUXO9Px72qCNYSvtM5PCAGD3f6de+HjYJbJBEJcTswMH1qdLcKIriuy1RoP6P0YmNeEDlAfSSyJiHrX98Oid5/fuCEs="</span>
 <span class="o">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">company</span><span class="o">.</span><span class="n">CreateWallet</span><span class="p">(</span><span class="s">"name"</span><span class="p">,</span> <span class="s">"password"</span><span class="p">,</span> <span class="s">"https://noti.domain/callback"</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">createWallet</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"https://noti.domain/callback"</span><span class="o">,</span> <span class="s">"description"</span><span class="o">);</span>
+</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">company</span><span class="o">.</span><span class="n">CreateWallet</span><span class="p">(</span><span class="s">"name"</span><span class="p">,</span> <span class="s">""</span><span class="p">,</span> <span class="s">"https://noti.domain/callback"</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">createWallet</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="s">"https://noti.domain/callback"</span><span class="o">,</span> <span class="s">"description"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> create a general wallet</p>
 <h4 id='http-request-12'>HTTP Request</h4>
@@ -1929,13 +1926,6 @@ data:
 <td>name</td>
 <td>body</td>
 <td>the wallet name</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-<tr>
-<td>password</td>
-<td>body</td>
-<td>the wallet password, should encrypted by <a href="#aes-encryption">AES encryption</a> and base64 encoded</td>
 <td>Yes</td>
 <td>string</td>
 </tr>
