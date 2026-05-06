@@ -132,7 +132,7 @@ For security purpose, it is strongly recommended that you bind an IP address or 
 ### get the latest address 
 
 ```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "GetAddress" "ETH"
+$ go run cmd/ctl/main.go "appkey" "appsecret" "GetAddress" "ETH" "USDT"
 code: 0
 message: success
 data:
@@ -144,7 +144,7 @@ data:
 
 ```javascript
     try {
-        const result = await api.getAddress("ETH")
+        const result = await api.getAddress("ETH", "USDT")
         console.log(result)
     } catch(e) {
         // do something
@@ -153,23 +153,24 @@ data:
 ```
 
 ```go
-	result, _ := app.GetAddress("ETH")
+	result, _ := app.GetAddress("ETH", "USDT")
 ```
 
 ```java
-  APIResult result = appTest.getAddress("ETH");
+  APIResult result = appTest.getAddress("ETH", "USDT");
 ```
 
 **Summary:** get the latest address, create if not exist
 
 #### HTTP Request 
-`GET /api/v1/address/{coinName}` 
+`GET /api/v1/address/{networkType}/{coinName}` 
 
 **Parameters**
 
 | Name | Located in | Description | Required | Type |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
+| networkType | path | networkType | Yes | string |
 | coinName | path | coinName | Yes | string |
 
 **Response Result**
@@ -182,7 +183,7 @@ mode | string | address mode
 ### create a new address 
 
 ```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "CreateAddress" "ETH"
+$ go run cmd/ctl/main.go "appkey" "appsecret" "CreateAddress" "ETH" "USDT"
 code: 0
 message: success
 data:
@@ -194,7 +195,7 @@ data:
 
 ```javascript
     try {
-        const result = await api.createAddress("ETH")
+        const result = await api.createAddress("ETH", "USDT")
         console.log(result)
     } catch(e) {
         // do something
@@ -203,25 +204,25 @@ data:
 ```
 
 ```go
-	result, _ := app.CreateAddress("ETH")
+	result, _ := app.CreateAddress("ETH", "USDT")
 ```
 
 ```java
-  APIResult result = appTest.createAddress("ETH");
+  APIResult result = appTest.createAddress("ETH", "USDT");
 ```
 
 **Summary:** create a new address
 
 #### HTTP Request 
-`POST /api/v1/address/{coinName}/new` 
+`POST /api/v1/address/{networkType}/{coinName}/new` 
 
 **Parameters**
 
 | Name | Located in | Description | Required | Type |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
+| networkType | path | networkType | Yes | string |
 | coinName | path | coinName | Yes | string |
-| mode | body | mode | No | string |
 
 **Response Result**
 
@@ -239,9 +240,10 @@ code: 0
 message: success
 data:
 {
-  "assets": [
-    "ETH"
-  ]
+  "assets": [{
+    "network": "ETH",
+    "coin": "USDT"
+  }]
 }
 ```
 
@@ -437,7 +439,7 @@ data:
   "orders": [{
     "bizType": "WITHDRAW",
     "block": 12970670,
-    "coinName": "ETH",
+    "coinName": "USDT",
     "confirmations": 21,
     "fee": "0.005000000000000000",
     "from": "0xdedc1eca923cc1227c20571030146d8a01b70774",
@@ -510,12 +512,11 @@ n | number | order index
 state | string | order state
 to | string | transaction output
 txid | string | transaction hash
-type | string | token type
+type | string | network type
 value | string | transaction value
 note | string | order note
 message | string | message to recipient of transfer
 createdAt | number |  unix timestamp, seconds
-finalizedAt | number |  unix timestamp, seconds
 relatedOrderId | string | related order id
 
 
@@ -529,7 +530,7 @@ data:
 {
   "bizType": "WITHDRAW",
   "block": 12970670,
-  "coinName": "ETH",
+  "coinName": "USDT",
   "confirmations": 21,
   "fee": "0.005000000000000000",
   "from": "0xdedc1eca923cc1227c20571030146d8a01b70774",
@@ -544,7 +545,6 @@ data:
   "note": "note",
   "message": "",
   "createdAt": 1569306519,
-  "finalizedAt": 1569306519,
   "relatedOrderId": "orderrNXBQGJlw09apVyg4nDo"
 }
 ```
@@ -595,13 +595,14 @@ n | number | order index
 state | string | order state
 to | string | transaction output
 txid | string | transaction hash
-type | string | token type
+type | string | network type
 value | string | transaction value
 note | string | order note
 message | string | message to recipient of transfer
 createdAt | number |  unix timestamp, seconds
-finalizedAt | number |  unix timestamp, seconds
 relatedOrderId | string | related order id
+
+
 ### update wallet order
 
 ```shell
@@ -855,7 +856,7 @@ For security purpose, it is strongly recommended that you bind an IP address or 
 ### create
 
 ```shell
-$ go run cmd/ctl/main.go "teamkey" "teamsecret" "CreateWallet" "name" "password" "https://noti.domain/callback"
+$ go run cmd/ctl/main.go "teamkey" "teamsecret" "CreateWallet" "name" "" "https://noti.domain/callback"
 code: 0
 message: success
 data:
@@ -868,11 +869,11 @@ data:
 ```
 
 ```go
-	result, _ = company.CreateWallet("name", "password", "https://noti.domain/callback")
+	result, _ = company.CreateWallet("name", "", "https://noti.domain/callback")
 ```
 
 ```java
-  APIResult result = companyTest.createWallet("name", "password", "https://noti.domain/callback", "description");
+  APIResult result = companyTest.createWallet("name", "", "https://noti.domain/callback", "description");
 ```
 
 **Summary:** create a general wallet
@@ -886,7 +887,6 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-Company-Key | header | team api key | Yes | string |
 | name | body | the wallet name | Yes | string |
-| password  | body | the wallet password, should encrypted by [AES encryption](#aes-encryption) and base64 encoded | Yes | string |
 | description | body | the wallet description | Yes | string |
 | webHook | body | the url will be called when send [a notification](#callback) | Yes | string |
 | aesIV | body | base64 encoded [AES encryption](#aes-encryption) iv, must be 16 bytes, used by encrypting app password and secret | Yes | string |

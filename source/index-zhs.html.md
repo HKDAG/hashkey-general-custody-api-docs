@@ -132,7 +132,7 @@ App appTest = new App(appContext);
 ### 获取最新地址 
 
 ```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "GetAddress" "ETH"
+$ go run cmd/ctl/main.go "appkey" "appsecret" "GetAddress" "ETH" "USDT"
 code: 0
 message: success
 data:
@@ -144,7 +144,7 @@ data:
 
 ```javascript
     try {
-        const result = await api.getAddress("ETH")
+        const result = await api.getAddress("ETH", "USDT")
         console.log(result)
     } catch(e) {
         // do something
@@ -153,23 +153,24 @@ data:
 ```
 
 ```go
-	result, _ := app.GetAddress("ETH")
+	result, _ := app.GetAddress("ETH", "USDT")
 ```
 
 ```java
-  APIResult result = appTest.getAddress("ETH");
+  APIResult result = appTest.getAddress("ETH", "USDT");
 ```
 
 **总结:** 获取最新地址, 若不存在即创建
 
 #### HTTP请求 
-`GET /api/v1/address/{coinName}` 
+`GET /api/v1/address/{networkType}/{coinName}` 
 
 **参数**
 
 | 名称 | 位置 | 描述 | 是否必需 | 类型 |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
+| networkType | path | networkType | Yes | string |
 | coinName | path | coinName | Yes | string |
 
 **响应结果**
@@ -182,7 +183,7 @@ mode | string | address mode
 ### 创建新地址 
 
 ```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "CreateAddress" "ETH"
+$ go run cmd/ctl/main.go "appkey" "appsecret" "CreateAddress" "ETH" "USDT"
 code: 0
 message: success
 data:
@@ -194,7 +195,7 @@ data:
 
 ```javascript
     try {
-        const result = await api.createAddress("ETH")
+        const result = await api.createAddress("ETH", "USDT")
         console.log(result)
     } catch(e) {
         // do something
@@ -203,25 +204,25 @@ data:
 ```
 
 ```go
-	result, _ := app.CreateAddress("ETH")
+	result, _ := app.CreateAddress("ETH", "USDT")
 ```
 
 ```java
-  APIResult result = appTest.createAddress("ETH");
+  APIResult result = appTest.createAddress("ETH", "USDT");
 ```
 
 **总结:** 创建新地址
 
 #### HTTP请求
-`POST /api/v1/address/{coinName}/new` 
+`POST /api/v1/address/{networkType}/{coinName}/new` 
 
 **参数**
 
 | 名称 | 位置 | 描述| 是否必需| 类型 |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
+| networkType | path | networkType | Yes | string |
 | coinName | path | coinName | Yes | string |
-| mode | body | mode | No | string |
 
 **响应结果**
 
@@ -240,9 +241,10 @@ code: 0
 message: success
 data:
 {
-  "assets": [
-    "ETH"
-  ]
+  "assets": [{
+    "network": "ETH",
+    "coin": "USDT"
+  }]
 }
 ```
 
@@ -445,7 +447,7 @@ data:
   "orders": [{
     "bizType": "WITHDRAW",
     "block": 12970670,
-    "coinName": "ETH",
+    "coinName": "USDT",
     "confirmations": 21,
     "fee": "0.005000000000000000",
     "from": "0xdedc1eca923cc1227c20571030146d8a01b70774",
@@ -519,10 +521,11 @@ n | number | 订单索引
 state | string | 订单状态
 to | string | 交易输出
 txid | string | 交易哈希
-type | string | 币种类型
+type | string | 网络类型
 value | string | 交易值
 note | string | 订单备注
 message | string | 转账消息
+createdAt | number | 创建时间(unix时间戳, 秒)
 relatedOrderId | string | 关联订单ID
 
 ### 获取钱包单笔订单
@@ -535,7 +538,7 @@ data:
 {
   "bizType": "WITHDRAW",
   "block": 12970670,
-  "coinName": "ETH",
+  "coinName": "USDT",
   "confirmations": 21,
   "fee": "0.005000000000000000",
   "from": "0xdedc1eca923cc1227c20571030146d8a01b70774",
@@ -598,10 +601,11 @@ n | number | 订单索引
 state | string | 订单状态
 to | string | 交易输出
 txid | string | 交易哈希
-type | string | 币种类型
+type | string | 网络类型
 value | string | 交易值
 note | string | 订单备注
 message | string | 转账消息
+createdAt | number | 创建时间(unix时间戳, 秒)
 relatedOrderId | string | 关联订单ID
 
 ### 更新钱包订单
@@ -857,7 +861,7 @@ Company companyTest = new Company(companyContext);
 ### 创建
 
 ```shell
-$ go run cmd/ctl/main.go "companykey" "companysecret" "CreateWallet" "name" "password" "https://noti.domain/callback"
+$ go run cmd/ctl/main.go "companykey" "companysecret" "CreateWallet" "name" "" "https://noti.domain/callback"
 code: 0
 message: success
 data:
@@ -870,11 +874,11 @@ data:
 ```
 
 ```go
-	result, _ = company.CreateWallet("name", "password", "https://noti.domain/callback")
+	result, _ = company.CreateWallet("name", "", "https://noti.domain/callback")
 ```
 
 ```java
-  APIResult result = companyTest.createWallet("name", "password", "https://noti.domain/callback", "description");
+  APIResult result = companyTest.createWallet("name", "", "https://noti.domain/callback", "description");
 ```
 
 **总结:** 创建钱包
@@ -888,7 +892,6 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-Company-Key | header | company key | Yes | string |
 | name | body | the wallet name | Yes | string |
-| password  | body | the wallet password, should encrypted by [AES encryption](#aes-encryption) and base64 encoded | Yes | string |
 | description | body | the wallet description | Yes | string |
 | webHook | body | the url will be called when send [a notification](#callback) | Yes | string |
 | aesIV | body | base64 encoded [AES encryption](#aes-encryption) iv, must be 16 bytes, used by encrypting app password and secret | Yes | string |
