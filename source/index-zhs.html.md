@@ -643,14 +643,14 @@ data:
 ### 提现
 
 ```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "Withdraw" "$(date +%s)" "ETH" "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072" "0.05"
+$ go run cmd/ctl/main.go "appkey" "appsecret" "Withdraw" "$(date +%s)" "ETH" "USDT" "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072" "0.05"
 code: 0
 message: success
 data:
 {
   "bizType": "WITHDRAW",
   "block": -1,
-  "coinName": "ETH",
+  "coinName": "USDT",
   "confirmations": 0,
   "fee": "0.0050000000",
   "from": "",
@@ -665,33 +665,14 @@ data:
 }
 ```
 
-```javascript
-    try {
-        let id = ''+new Date().valueOf()
-        let coinType = 'ETH'
-        let to = '0x56204b988844b20160035273fD98Dbb2A54C85F5'
-        let value = '0.01'
-        let memo = ''
-        result = await api.withdraw(id, coinType, to, value, memo)
-        console.log(result)
-    } catch(e) {
-        // do something
-        console.log(e)
-    }
-```
-
 ```go
-	result, _ = app.Withdraw("1569225735", "ETH", "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072", "0.05")
-```
-
-```java
-  APIResult result = appTest.withdraw(id, "ETH", "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072", "0.05");
+	result, _ = app.Withdraw("1569225735", "ETH", "USDT", "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072", "0.05")
 ```
 
 **总结:** 提现
 
 #### HTTP请求 
-`POST /api/v1/app/{coinName}/withdraw` 
+`POST /api/v1/app/{network}/{coinName}/withdraw` 
 
 **参数**
 
@@ -712,7 +693,7 @@ data:
 --------- | ------- | ---------
 bizType | string | order type
 block | number | the block transaction mined in
-coinName | string | unique token name
+coinName | string | token name
 confirmations | number | number of transaction confirmations
 fee | string | fee burnt for the transaction
 from | string | transaction input
@@ -722,7 +703,7 @@ n | number | order index
 state | string | order state
 to | string | transaction output
 txid | string | transaction hash
-type | string | token type
+type | string | network type
 value | string | transaction value
 note | string | order note
 
@@ -788,7 +769,6 @@ n | number | order index
 state | string | order state
 to | string | transaction output
 txid | string | transaction hash
-type | string | token type
 value | string | transaction value
 note | string | transfer note
 message | string | transfer message
