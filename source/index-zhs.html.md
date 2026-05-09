@@ -951,20 +951,14 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "withdrawID": "7Cab38EA42538f4D8C2",
   "bizType": "DEPOSIT",
   "coinName": "ETH",
-  "type": "ETH",
   "state": "DONE",
-  "memo": "",
   "value": "1.000000000000000000",
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
-  "n": 0,
-  "block": 13721091,
-  "affirmativeConfirmation": 20,
   "confirmations": 27,
-  "sign": "796dde931a15c98edc3dfdb65a2c2addfde422f217a1f6934be9226542839aa0",
-  "relatedOrderID": "orderrNXBQGJlw09apVyg4nDo"
+  "sign": "796dde931a15c98edc3dfdb65a2c2addfde422f217a1f6934be9226542839aa0"
 }
 ```
 
@@ -978,18 +972,12 @@ coinName | string | 币种名称
 txid | string | 交易哈希
 state | string | 订单状态
 bizType | string | 订单类型
-type | string | 币种类型
-from | string | 交易输入
+from | string | 交易输入，提币订单该值为空
 to | string | 交易输出
 value | string | 交易值
-affirmativeConfirmation | number | 区块链确认数
 confirmations | number | 交易确认数
-fee | string | 交易费用
-block | number | 区块高度
-memo | string | 订单备注
-n | number | 订单索引
+fee | string | 提现手续费
 sign | string | 签名
-relatedOrderID | string | 关联订单ID
 
 ### 签名
 上面的 sign 参数可以通过下面的方法验证，以保证这个回调结果的发送方身份:
@@ -1004,17 +992,12 @@ relatedOrderID | string | 关联订单ID
   "withdrawID": "7Cab38EA42538f4D8C2",
   "bizType": "DEPOSIT",
   "coinName": "ETH",
-  "type": "ETH",
   "state": "DONE",
-  "memo": "",
   "value": "1.000000000000000000",
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
-  "n": 0,
-  "block": 13721091,
-  "affirmativeConfirmation": 20,
   "confirmations": 27
 }
 `

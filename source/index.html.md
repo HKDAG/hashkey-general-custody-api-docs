@@ -946,20 +946,14 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "withdrawID": "7Cab38EA42538f4D8C2",
   "bizType": "DEPOSIT",
   "coinName": "ETH",
-  "type": "ETH",
   "state": "DONE",
-  "memo": "",
   "value": "1.000000000000000000",
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
-  "n": 0,
-  "block": 13721091,
-  "affirmativeConfirmation": 20,
   "confirmations": 27,
-  "sign": "fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3",
-  "relatedOrderID": "orderrNXBQGJlw09apVyg4nDo"
+  "sign": "fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3"
 }
 ```
 
@@ -973,18 +967,12 @@ coinName | string | unique token name
 txid | string | transaction hash
 state | string | order state
 bizType | string | order type
-type | string | token type
-from | string | transaction input
+from | string | transaction input, the value of withdraw order is empty
 to | string | transaction output
 value | string | transaction value
-affirmativeConfirmation | number | affirmative confirmation of the blockchain
 confirmations | number | number of transaction confirmations
-fee | string | fee burnt for the transaction
-block | number | the block transaction mined in
-memo | string | order note, editable on admin
-n | number | the order index
+fee | string | withdraw fee
 sign | string | hex string, sign parameters with HMACSHA256
-relatedOrderId | string | related order id
 
 ### Signature
 In order to prove the message sender's identity, it should be verified by the following steps:
@@ -999,17 +987,12 @@ In order to prove the message sender's identity, it should be verified by the fo
   "withdrawID": "7Cab38EA42538f4D8C2",
   "bizType": "DEPOSIT",
   "coinName": "ETH",
-  "type": "ETH",
   "state": "DONE",
-  "memo": "",
   "value": "1.000000000000000000",
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
-  "n": 0,
-  "block": 13721091,
-  "affirmativeConfirmation": 20,
   "confirmations": 27
 }
 `
