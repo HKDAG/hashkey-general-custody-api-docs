@@ -1637,7 +1637,7 @@ data:
 <td>order note</td>
 </tr>
 </tbody></table>
-<h3 id='transfer'>transfer</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> Transfer <span class="s2">"e5dJyVp8R3B1m4o"</span> <span class="s2">"ETH"</span> <span class="s2">"0.01"</span>
+<h3 id='transfer'>transfer</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> Transfer <span class="s2">"</span><span class="si">$(</span><span class="nb">date</span> +%s<span class="si">)</span><span class="s2">"</span> <span class="s2">"e5dJyVp8R3B1m4o"</span> <span class="s2">"ETH"</span> <span class="s2">"0.01"</span>
 code: 0
 message: success
 data:
@@ -1658,7 +1658,7 @@ data:
   <span class="s2">"type"</span>: <span class="s2">"ETH"</span>,
   <span class="s2">"value"</span>: <span class="s2">"0.01"</span>
 <span class="o">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">Transfer</span><span class="p">(</span><span class="s">"e5dJyVp8R3B1m4o"</span><span class="p">,</span> <span class="s">"ETH"</span><span class="p">,</span> <span class="s">"0.01"</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">Transfer</span><span class="p">(</span><span class="s">"1569225735"</span><span class="p">,</span> <span class="s">"e5dJyVp8R3B1m4o"</span><span class="p">,</span> <span class="s">"ETH"</span><span class="p">,</span> <span class="s">"0.01"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Summary:</strong> transfer</p>
 <h4 id='http-request-10'>HTTP Request</h4>
@@ -1686,6 +1686,13 @@ data:
 <td>coinName</td>
 <td>path</td>
 <td>coin type</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>id</td>
+<td>body</td>
+<td>transfer id</td>
 <td>Yes</td>
 <td>string</td>
 </tr>
@@ -2064,20 +2071,14 @@ data:
   </span><span class="nl">"withdrawID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7Cab38EA42538f4D8C2"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"bizType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DEPOSIT"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"coinName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ETH"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ETH"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DONE"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"memo"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
   </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.000000000000000000"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"fee"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.000000000000000000"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"from"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x29152c850456899A78178622B6543BBFfC224495"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"txid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"n"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"block"</span><span class="p">:</span><span class="w"> </span><span class="mi">13721091</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"affirmativeConfirmation"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
   </span><span class="nl">"confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"sign"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"relatedOrderID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orderrNXBQGJlw09apVyg4nDo"</span><span class="w">
+  </span><span class="nl">"sign"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <p><strong>Callbck Result</strong></p>
@@ -2120,14 +2121,9 @@ data:
 <td>order type</td>
 </tr>
 <tr>
-<td>type</td>
-<td>string</td>
-<td>token type</td>
-</tr>
-<tr>
 <td>from</td>
 <td>string</td>
-<td>transaction input</td>
+<td>transaction input, the value of withdraw order is empty</td>
 </tr>
 <tr>
 <td>to</td>
@@ -2140,11 +2136,6 @@ data:
 <td>transaction value</td>
 </tr>
 <tr>
-<td>affirmativeConfirmation</td>
-<td>number</td>
-<td>affirmative confirmation of the blockchain</td>
-</tr>
-<tr>
 <td>confirmations</td>
 <td>number</td>
 <td>number of transaction confirmations</td>
@@ -2152,32 +2143,12 @@ data:
 <tr>
 <td>fee</td>
 <td>string</td>
-<td>fee burnt for the transaction</td>
-</tr>
-<tr>
-<td>block</td>
-<td>number</td>
-<td>the block transaction mined in</td>
-</tr>
-<tr>
-<td>memo</td>
-<td>string</td>
-<td>order note, editable on admin</td>
-</tr>
-<tr>
-<td>n</td>
-<td>number</td>
-<td>the order index</td>
+<td>withdraw fee</td>
 </tr>
 <tr>
 <td>sign</td>
 <td>string</td>
 <td>hex string, sign parameters with HMACSHA256</td>
-</tr>
-<tr>
-<td>relatedOrderId</td>
-<td>string</td>
-<td>related order id</td>
 </tr>
 </tbody></table>
 <h3 id='signature'>Signature</h3>
@@ -2194,17 +2165,12 @@ data:
 &quot;withdrawID&quot;: &quot;7Cab38EA42538f4D8C2&quot;,
 &quot;bizType&quot;: &quot;DEPOSIT&quot;,
 &quot;coinName&quot;: &quot;ETH&quot;,
-&quot;type&quot;: &quot;ETH&quot;,
 &quot;state&quot;: &quot;DONE&quot;,
-&quot;memo&quot;: &quot;&quot;,
 &quot;value&quot;: &quot;1.000000000000000000&quot;,
 &quot;fee&quot;: &quot;0.000000000000000000&quot;,
 &quot;from&quot;: &quot;0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&quot;,
 &quot;to&quot;: &quot;0x29152c850456899A78178622B6543BBFfC224495&quot;,
 &quot;txid&quot;: &quot;0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&quot;,
-&quot;n&quot;: 0,
-&quot;block&quot;: 13721091,
-&quot;affirmativeConfirmation&quot;: 20,
 &quot;confirmations&quot;: 27
 }
 </code></p>
