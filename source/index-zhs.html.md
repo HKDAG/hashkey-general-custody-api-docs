@@ -710,7 +710,7 @@ note | string | order note
 ### 划转
 
 ```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" Transfer "e5dJyVp8R3B1m4o" "ETH" "0.01"
+$ go run cmd/ctl/main.go "appkey" "appsecret" Transfer "$(date +%s)" "e5dJyVp8R3B1m4o" "ETH" "0.01"
 code: 0
 message: success
 data:
@@ -734,7 +734,7 @@ data:
 ```
 
 ```go
-	result, _ = app.Transfer("e5dJyVp8R3B1m4o", "ETH", "0.01")
+	result, _ = app.Transfer("1569225735", "e5dJyVp8R3B1m4o", "ETH", "0.01")
 ```
 
 **总结:** 划转
@@ -748,6 +748,7 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
 | coinName | path | coin type | Yes | string |
+| id | body | transfer id | Yes | string |
 | to | body | receive wallet id | Yes | string |
 | value | body | transfer amount | Yes | string |
 | note | body | transfer note, can be empty string | Yes | string |
