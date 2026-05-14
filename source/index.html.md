@@ -296,16 +296,14 @@ data:
       "money": "98175466.911631525",
       "name": "BTC",
       "price": "9816.344189",
-      "outLocked": "11.2",
-      "inLocked": "11.2"
+      "outLocked": "11.2"
     },
     {
       "balance": "1.0",
       "money": "246.565827",
       "name": "ETH",
       "price": "246.565827",
-      "outLocked": "11.2",
-      "inLocked": "11.2"
+      "outLocked": "11.2"
     }
   ],
   "total": "98175713.477458525"
@@ -357,75 +355,6 @@ money | string | the amount(USD) equal to the balance
 name | string | the coin name
 price | string | the coin price(USD)
 outLocked | string | the coin transfer out amount under locked
-inLocked | string | the coin transfer in amount under locked
-
-### get wallet single asset balance 
-
-```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "GetBalance" "ETH"
-code: 0
-message: success
-data:
-{
-  "balance": "0.450000000000000000",
-  "inLocked": "0.000000000000000000",
-  "inLockedFee": "0.000000000000000000",
-  "outLocked": "0.000000000000000000",
-  "outLockedFee": "0.000000000000000000",
-  "delegateAmount": "0.000000000000000000",
-  "delegateInLocked": "0.000000000000000000",
-  "delegateOutLocked": "0.000000000000000000",
-  "undelegateAmount": "0.000000000000000000",
-  "undelegateInLocked": "0.000000000000000000",
-  "undelegateOutLocked": "0.000000000000000000"
-}
-```
-
-```javascript
-    try {
-        result = await api.getBalance("ETH")
-        console.log(result)
-    } catch(e) {
-        // do something
-        console.log(e)
-    }
-```
-
-```go
-	result, _ = app.GetBalance("ETH")
-```
-
-```java
-  APIResult result = appTest.getBalance("ETH");
-```
-
-**Summary:** get wallet single asset balance
-
-#### HTTP Request 
-`GET /api/v1/app/balance/{coinName}` 
-
-**Parameters**
-
-| Name | Located in | Description | Required | Type |
-| ---- | ---------- | ----------- | -------- | ---- |
-| X-App-Key | header | app key | Yes | string |
-| coinName | path | coin type | Yes | string |
-
-**Response Result**
-
-Value | Type | Description
---------- | ------- | ---------
-balance | string | the coin balance
-inLocked | string | the coin transfer in amount under locked
-inLockedFee | string | the coin transfer in fee under locked
-outLocked | string | the coin transfer out amount under locked
-outLockedFee | string | the coin transfer out fee under locked
-delegateAmount | string | the coin delegate amount
-delegateInLocked | string | the coin delegate transfer in amount under locked
-delegateOutLocked | string | the coin delegate transfer out amount under locked
-undelegateAmount | string | the undelegate coin amount
-undelegateInLocked | string | the undelegate coin transfer in amount under locked
-undelegateOutLocked | string | the undelegate coin transfer out amount under locked
 
 ### get wallet orders
 

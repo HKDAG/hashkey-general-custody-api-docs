@@ -297,16 +297,14 @@ data:
       "money": "98175466.911631525",
       "name": "BTC",
       "price": "9816.344189",
-      "outLocked": "11.2",
-      "inLocked": "11.2"
+      "outLocked": "11.2"
     },
     {
       "balance": "1.0",
       "money": "246.565827",
       "name": "ETH",
       "price": "246.565827",
-      "outLocked": "11.2",
-      "inLocked": "11.2"
+      "outLocked": "11.2"
     }
   ],
   "total": "98175713.477458525"
@@ -358,82 +356,6 @@ money | string | 币种余额对应的美元价值
 name | string | 币种名称
 price | string | 币种价格(USD)
 outLocked | string | 币种转出锁定余额
-inLocked | string | 币种转入锁定余额
-
-
-### 获取钱包单个币种余额
-
-```shell
-$ go run cmd/ctl/main.go "appkey" "appsecret" "GetBalance" "ETH"
-code: 0
-message: success
-data:
-{
-  "balance": "0.450000000000000000",
-  "inLocked": "0.000000000000000000",
-  "inLockedFee": "0.000000000000000000",
-  "outLocked": "0.000000000000000000",
-  "outLockedFee": "0.000000000000000000",
-  "stakingBalance": "0.000000000000000000",
-  "stakingInLocked": "0.000000000000000000",
-  "stakingOutLocked": "0.000000000000000000",
-  "delegateAmount": "0.000000000000000000",
-  "delegateInLocked": "0.000000000000000000",
-  "delegateOutLocked": "0.000000000000000000",
-  "undelegateAmount": "0.000000000000000000",
-  "undelegateInLocked": "0.000000000000000000",
-  "undelegateOutLocked": "0.000000000000000000"
-}
-```
-
-```javascript
-    try {
-        result = await api.getBalance("ETH")
-        console.log(result)
-    } catch(e) {
-        // do something
-        console.log(e)
-    }
-```
-
-```go
-	result, _ = app.GetBalance("ETH")
-```
-
-```java
-  APIResult result = appTest.getBalance("ETH");
-```
-
-**总结:** 获取钱包余额
-
-#### HTTP请求 
-`GET /api/v1/app/balance/{coinName}` 
-
-**参数**
-
-| 名称 | 位置 | 描述| 是否必需| 类型 |
-| ---- | ---------- | ----------- | -------- | ---- |
-| X-App-Key | header | app key | Yes | string |
-| coinName | path | coin type | Yes | string |
-
-**响应结果**
-
-值 | 类型 | 描述
---------- | ------- | ---------
-balance | string | the coin balance
-inLocked | string | the coin transfer in amount under locked
-inLockedFee | string | the coin transfer in fee under locked
-outLocked | string | the coin transfer out amount under locked
-outLockedFee | string | the coin transfer out fee under locked
-stakingBalance | string | the staking coin balance
-stakingInLocked | string | the staking coin transfer in amount under locked
-stakingOutLocked | string | the staking coin transfer out amount under locked
-delegateAmount | string | the coin delegate amount
-delegateInLocked | string | the coin delegate transfer in amount under locked
-delegateOutLocked | string | the coin delegate transfer out amount under locked
-undelegateAmount | string | the undelegate coin amount
-undelegateInLocked | string | the undelegate coin transfer in amount under locked
-undelegateOutLocked | string | the undelegate coin transfer out amount under locked
 
 ### 获取钱包订单
 
