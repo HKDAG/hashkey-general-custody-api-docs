@@ -355,9 +355,6 @@
                             <a href="#get-wallet-balances" class="toc-h3 toc-link" data-title="get wallet balances">get wallet balances</a>
                           </li>
                           <li>
-                            <a href="#get-wallet-single-asset-balance" class="toc-h3 toc-link" data-title="get wallet single asset balance">get wallet single asset balance</a>
-                          </li>
-                          <li>
                             <a href="#get-wallet-orders" class="toc-h3 toc-link" data-title="get wallet orders">get wallet orders</a>
                           </li>
                           <li>
@@ -792,16 +789,14 @@ data:
       <span class="s2">"money"</span>: <span class="s2">"98175466.911631525"</span>,
       <span class="s2">"name"</span>: <span class="s2">"BTC"</span>,
       <span class="s2">"price"</span>: <span class="s2">"9816.344189"</span>,
-      <span class="s2">"outLocked"</span>: <span class="s2">"11.2"</span>,
-      <span class="s2">"inLocked"</span>: <span class="s2">"11.2"</span>
+      <span class="s2">"outLocked"</span>: <span class="s2">"11.2"</span>
     <span class="o">}</span>,
     <span class="o">{</span>
       <span class="s2">"balance"</span>: <span class="s2">"1.0"</span>,
       <span class="s2">"money"</span>: <span class="s2">"246.565827"</span>,
       <span class="s2">"name"</span>: <span class="s2">"ETH"</span>,
       <span class="s2">"price"</span>: <span class="s2">"246.565827"</span>,
-      <span class="s2">"outLocked"</span>: <span class="s2">"11.2"</span>,
-      <span class="s2">"inLocked"</span>: <span class="s2">"11.2"</span>
+      <span class="s2">"outLocked"</span>: <span class="s2">"11.2"</span>
     <span class="o">}</span>
   <span class="o">]</span>,
   <span class="s2">"total"</span>: <span class="s2">"98175713.477458525"</span>
@@ -895,134 +890,6 @@ data:
 <td>string</td>
 <td>the coin transfer out amount under locked</td>
 </tr>
-<tr>
-<td>inLocked</td>
-<td>string</td>
-<td>the coin transfer in amount under locked</td>
-</tr>
-</tbody></table>
-<h3 id='get-wallet-single-asset-balance'>get wallet single asset balance</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"GetBalance"</span> <span class="s2">"ETH"</span>
-code: 0
-message: success
-data:
-<span class="o">{</span>
-  <span class="s2">"balance"</span>: <span class="s2">"0.450000000000000000"</span>,
-  <span class="s2">"inLocked"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"inLockedFee"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"outLocked"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"outLockedFee"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"delegateAmount"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"delegateInLocked"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"delegateOutLocked"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"undelegateAmount"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"undelegateInLocked"</span>: <span class="s2">"0.000000000000000000"</span>,
-  <span class="s2">"undelegateOutLocked"</span>: <span class="s2">"0.000000000000000000"</span>
-<span class="o">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
-        <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">api</span><span class="p">.</span><span class="nx">getBalance</span><span class="p">(</span><span class="dl">"</span><span class="s2">ETH</span><span class="dl">"</span><span class="p">)</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// do something</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
-    <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">GetBalance</span><span class="p">(</span><span class="s">"ETH"</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">getBalance</span><span class="o">(</span><span class="s">"ETH"</span><span class="o">);</span>
-</code></pre></div>
-<p><strong>Summary:</strong> get wallet single asset balance</p>
-<h4 id='http-request-5'>HTTP Request</h4>
-<p><code>GET /api/v1/app/balance/{coinName}</code> </p>
-
-<p><strong>Parameters</strong></p>
-
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Located in</th>
-<th>Description</th>
-<th>Required</th>
-<th>Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>X-App-Key</td>
-<td>header</td>
-<td>app key</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-<tr>
-<td>coinName</td>
-<td>path</td>
-<td>coin type</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-</tbody></table>
-
-<p><strong>Response Result</strong></p>
-
-<table><thead>
-<tr>
-<th>Value</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>balance</td>
-<td>string</td>
-<td>the coin balance</td>
-</tr>
-<tr>
-<td>inLocked</td>
-<td>string</td>
-<td>the coin transfer in amount under locked</td>
-</tr>
-<tr>
-<td>inLockedFee</td>
-<td>string</td>
-<td>the coin transfer in fee under locked</td>
-</tr>
-<tr>
-<td>outLocked</td>
-<td>string</td>
-<td>the coin transfer out amount under locked</td>
-</tr>
-<tr>
-<td>outLockedFee</td>
-<td>string</td>
-<td>the coin transfer out fee under locked</td>
-</tr>
-<tr>
-<td>delegateAmount</td>
-<td>string</td>
-<td>the coin delegate amount</td>
-</tr>
-<tr>
-<td>delegateInLocked</td>
-<td>string</td>
-<td>the coin delegate transfer in amount under locked</td>
-</tr>
-<tr>
-<td>delegateOutLocked</td>
-<td>string</td>
-<td>the coin delegate transfer out amount under locked</td>
-</tr>
-<tr>
-<td>undelegateAmount</td>
-<td>string</td>
-<td>the undelegate coin amount</td>
-</tr>
-<tr>
-<td>undelegateInLocked</td>
-<td>string</td>
-<td>the undelegate coin transfer in amount under locked</td>
-</tr>
-<tr>
-<td>undelegateOutLocked</td>
-<td>string</td>
-<td>the undelegate coin transfer out amount under locked</td>
-</tr>
 </tbody></table>
 <h3 id='get-wallet-orders'>get wallet orders</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"GetOrders"</span> 1 10
 code: 0
@@ -1058,7 +925,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">getOrders</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get wallet orders</p>
-<h4 id='http-request-6'>HTTP Request</h4>
+<h4 id='http-request-5'>HTTP Request</h4>
 <p><code>GET /api/v1/app/orders</code> </p>
 
 <p><strong>Parameters</strong></p>
@@ -1272,7 +1139,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">appTest</span><span class="o">.</span><span class="na">getOrder</span><span class="o">(</span><span class="s">"rNXBQGJlw09apVyg4nDo"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get wallet single order</p>
-<h4 id='http-request-7'>HTTP Request</h4>
+<h4 id='http-request-6'>HTTP Request</h4>
 <p><code>GET /api/v1/app/order/{id}</code> </p>
 
 <p><strong>Parameters</strong></p>
@@ -1410,7 +1277,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">UpdateOrder</span><span class="p">(</span><span class="s">"rNXBQGJlw09apVyg4nDo"</span><span class="p">,</span> <span class="s">"123"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Summary:</strong> update wallet order</p>
-<h4 id='http-request-8'>HTTP Request</h4>
+<h4 id='http-request-7'>HTTP Request</h4>
 <p><code>PUT /api/v1/app/order/{id}</code> </p>
 
 <p><strong>Parameters</strong></p>
@@ -1480,7 +1347,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">Withdraw</span><span class="p">(</span><span class="s">"1569225735"</span><span class="p">,</span> <span class="s">"ETH"</span><span class="p">,</span> <span class="s">"USDT"</span><span class="p">,</span> <span class="s">"0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072"</span><span class="p">,</span> <span class="s">"0.05"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Summary:</strong> withdraw</p>
-<h4 id='http-request-9'>HTTP Request</h4>
+<h4 id='http-request-8'>HTTP Request</h4>
 <p><code>POST /api/v1/app/{network}/{coinName}/withdraw</code> </p>
 
 <p><strong>Parameters</strong></p>
@@ -1661,7 +1528,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">Transfer</span><span class="p">(</span><span class="s">"1569225735"</span><span class="p">,</span> <span class="s">"e5dJyVp8R3B1m4o"</span><span class="p">,</span> <span class="s">"ETH"</span><span class="p">,</span> <span class="s">"0.01"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Summary:</strong> transfer</p>
-<h4 id='http-request-10'>HTTP Request</h4>
+<h4 id='http-request-9'>HTTP Request</h4>
 <p><code>POST /api/v1/app/{coinName}/transfer</code> </p>
 
 <p><strong>Parameters</strong></p>
@@ -1820,7 +1687,7 @@ data:
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get system current timestamp</p>
-<h4 id='http-request-11'>HTTP Request</h4>
+<h4 id='http-request-10'>HTTP Request</h4>
 <p><code>GET /api/v1/system/time</code></p>
 
 <p><strong>Parameters</strong></p>
@@ -1890,7 +1757,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">createWallet</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="s">"https://noti.domain/callback"</span><span class="o">,</span> <span class="s">"description"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> create a general wallet</p>
-<h4 id='http-request-12'>HTTP Request</h4>
+<h4 id='http-request-11'>HTTP Request</h4>
 <p><code>POST /api/v1/app</code> </p>
 
 <p><strong>Parameters</strong></p>
@@ -1984,7 +1851,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">getWalletKeys</span><span class="o">(</span><span class="s">"appID"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get appkeys(include appsecret)</p>
-<h4 id='http-request-13'>HTTP Request</h4>
+<h4 id='http-request-12'>HTTP Request</h4>
 <p><code>GET /api/v1/app/{appID}/keys</code> </p>
 
 <p><strong>Parameters</strong></p>
