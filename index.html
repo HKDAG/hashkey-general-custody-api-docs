@@ -390,9 +390,6 @@
                           <li>
                             <a href="#create" class="toc-h3 toc-link" data-title="create">create</a>
                           </li>
-                          <li>
-                            <a href="#get-appkeys" class="toc-h3 toc-link" data-title="get appkeys">get appkeys</a>
-                          </li>
                       </ul>
                   </li>
               </ul>
@@ -573,6 +570,7 @@ message: success
 data:
 <span class="o">{</span>
   <span class="s2">"address"</span>: <span class="s2">"0x9bf65CDF5729b9588F6bAEBb2Aa2926472D4a035"</span>,
+  <span class="s2">"memo"</span>: <span class="s2">""</span>,
   <span class="s2">"mode"</span>: <span class="s2">"deposit"</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
@@ -638,6 +636,11 @@ data:
 <td>the new address</td>
 </tr>
 <tr>
+<td>memo</td>
+<td>string</td>
+<td>address memo</td>
+</tr>
+<tr>
 <td>mode</td>
 <td>string</td>
 <td>address mode</td>
@@ -649,6 +652,7 @@ message: success
 data:
 <span class="o">{</span>
   <span class="s2">"address"</span>: <span class="s2">"0x9bf65CDF5729b9588F6bAEBb2Aa2926472D4a035"</span>,
+  <span class="s2">"memo"</span>: <span class="s2">""</span>,
   <span class="s2">"mode"</span>: <span class="s2">"deposit"</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
@@ -712,6 +716,11 @@ data:
 <td>address</td>
 <td>string</td>
 <td>the new address</td>
+</tr>
+<tr>
+<td>memo</td>
+<td>string</td>
+<td>address memo</td>
 </tr>
 <tr>
 <td>mode</td>
@@ -1826,102 +1835,6 @@ data:
 <td>appKey</td>
 <td>string</td>
 <td>the appkey placed in the header of <a href="#wallet-api">Wallet API</a></td>
-</tr>
-<tr>
-<td>encryptedAppSecret</td>
-<td>string</td>
-<td>the base64 encoded <a href="#aes-encryption">AES encrypted</a> appsecret, the appsecret used for the <a href="#signature">signature</a> of <a href="#wallet-api">Wallet API</a></td>
-</tr>
-</tbody></table>
-<h3 id='get-appkeys'>get appkeys</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"teamkey"</span> <span class="s2">"teamsecret"</span> <span class="s2">"GetWalletKeys"</span> <span class="s2">"appID"</span>
-code: 0
-message: success
-data:
-<span class="o">{</span>
-  <span class="s2">"keys"</span>: <span class="o">[</span>
-    <span class="o">{</span>
-      <span class="s2">"appKey"</span>: <span class="s2">"nq73yzkovqo44fsek2nq37nw"</span>,
-      <span class="s2">"appSecret"</span>: <span class="s2">"nn2oh58iuc1sg2adya1golz35cowjbz7r0hfjt2ey6b4fc4xyq6kdopp9tlp0ko3"</span>,
-      <span class="s2">"enable"</span>: <span class="nb">true</span>,
-      <span class="s2">"encryptedAppSecret"</span>: <span class="s2">"+XowuN5bDYKKoDXvci19uoOiYAR+esV762cnBFCd2oX5pfRvOsCsRCyS0eopj9TdziDCm2N8YIBk+/Gj0JGwwKjtXA829ivYdiiVHEe6jvE="</span>
-    <span class="o">}</span>
-  <span class="o">]</span>
-<span class="o">}</span>
-</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code>    <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">company</span><span class="o">.</span><span class="n">GetWalletKeys</span><span class="p">(</span><span class="s">"appID"</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">getWalletKeys</span><span class="o">(</span><span class="s">"appID"</span><span class="o">);</span>
-</code></pre></div>
-<p><strong>Summary:</strong> get appkeys(include appsecret)</p>
-<h4 id='http-request-12'>HTTP Request</h4>
-<p><code>GET /api/v1/app/{appID}/keys</code> </p>
-
-<p><strong>Parameters</strong></p>
-
-<table><thead>
-<tr>
-<th>Name</th>
-<th>Located in</th>
-<th>Description</th>
-<th>Required</th>
-<th>Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>X-Company-Key</td>
-<td>header</td>
-<td>team api key</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-<tr>
-<td>appID</td>
-<td>path</td>
-<td>wallet id</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-<tr>
-<td>aesIV</td>
-<td>query</td>
-<td>base64 encoded <a href="#aes-encryption">AES encryption</a> iv, must be 16 bytes, used by encrypting app secret in the response</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-</tbody></table>
-
-<p><strong>Response Result</strong></p>
-
-<table><thead>
-<tr>
-<th>Value</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>keys</td>
-<td>array</td>
-<td>the appkey list</td>
-</tr>
-</tbody></table>
-
-<p>key:</p>
-
-<table><thead>
-<tr>
-<th>Value</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>appKey</td>
-<td>string</td>
-<td>the appkey placed in the header of <a href="#wallet-api">Wallet API</a></td>
-</tr>
-<tr>
-<td>enable</td>
-<td>boolean</td>
-<td>enable flag, the appkey will been forbidden if set false</td>
 </tr>
 <tr>
 <td>encryptedAppSecret</td>
