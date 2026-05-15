@@ -138,6 +138,7 @@ message: success
 data:
 {
   "address": "0x9bf65CDF5729b9588F6bAEBb2Aa2926472D4a035",
+  "memo": "",
   "mode": "deposit"
 }
 ```
@@ -178,6 +179,7 @@ data:
 Value | Type | Description
 --------- | ------- | ---------
 address | string | the new address
+memo | string | address memo
 mode | string | address mode
 
 ### create a new address 
@@ -189,6 +191,7 @@ message: success
 data:
 {
   "address": "0x9bf65CDF5729b9588F6bAEBb2Aa2926472D4a035",
+  "memo": "",
   "mode": "deposit"
 }
 ```
@@ -229,6 +232,7 @@ data:
 Value | Type | Description
 --------- | ------- | ---------
 address | string | the new address
+memo | string | address memo
 mode | string | address mode
 
 ## Wallet
@@ -808,61 +812,6 @@ Value | Type | Description
 id | string | wallet id
 appKey | string | the appkey placed in the header of [Wallet API](#wallet-api)
 encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption) appsecret, the appsecret used for the [signature](#signature) of [Wallet API](#wallet-api)
-
-### get appkeys
-
-```shell
-$ go run cmd/ctl/main.go "teamkey" "teamsecret" "GetWalletKeys" "appID"
-code: 0
-message: success
-data:
-{
-  "keys": [
-    {
-      "appKey": "nq73yzkovqo44fsek2nq37nw",
-      "appSecret": "nn2oh58iuc1sg2adya1golz35cowjbz7r0hfjt2ey6b4fc4xyq6kdopp9tlp0ko3",
-      "enable": true,
-      "encryptedAppSecret": "+XowuN5bDYKKoDXvci19uoOiYAR+esV762cnBFCd2oX5pfRvOsCsRCyS0eopj9TdziDCm2N8YIBk+/Gj0JGwwKjtXA829ivYdiiVHEe6jvE="
-    }
-  ]
-}
-```
-
-```go
-	result, _ = company.GetWalletKeys("appID")
-```
-
-```java
-  APIResult result = companyTest.getWalletKeys("appID");
-```
-
-**Summary:** get appkeys(include appsecret)
-
-#### HTTP Request 
-`GET /api/v1/app/{appID}/keys` 
-
-**Parameters**
-
-| Name | Located in | Description | Required | Type |
-| ---- | ---------- | ----------- | -------- | ---- |
-| X-Company-Key | header | team api key | Yes | string |
-| appID | path | wallet id | Yes | string |
-| aesIV | query | base64 encoded [AES encryption](#aes-encryption) iv, must be 16 bytes, used by encrypting app secret in the response | Yes | string |
-
-**Response Result**
-
-Value | Type | Description
---------- | ------- | ---------
-keys | array | the appkey list
-
-key:
-
-Value | Type | Description
---------- | ------- | ---------
-appKey | string | the appkey placed in the header of [Wallet API](#wallet-api)
-enable | boolean | enable flag, the appkey will been forbidden if set false
-encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption) appsecret, the appsecret used for the [signature](#signature) of [Wallet API](#wallet-api)
-
 
 # Callback
 
