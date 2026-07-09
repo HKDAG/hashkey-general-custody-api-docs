@@ -372,6 +372,17 @@
                       </ul>
                   </li>
                   <li>
+                    <a href="#whitelist" class="toc-h2 toc-link" data-title="Whitelist">Whitelist</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#get-verify-whitelist-address" class="toc-h3 toc-link" data-title="Get Verify Whitelist Address">Get Verify Whitelist Address</a>
+                          </li>
+                          <li>
+                            <a href="#wallet-signing-verification" class="toc-h3 toc-link" data-title="Wallet Signing Verification">Wallet Signing Verification</a>
+                          </li>
+                      </ul>
+                  </li>
+                  <li>
                     <a href="#system" class="toc-h2 toc-link" data-title="System">System</a>
                       <ul class="toc-list-h3">
                           <li>
@@ -1687,6 +1698,257 @@ data:
 <td>transfer message</td>
 </tr>
 </tbody></table>
+<h2 id='whitelist'>Whitelist</h2><h3 id='get-verify-whitelist-address'>Get Verify Whitelist Address</h3>
+<p><strong>Summary:</strong> Verify whether a deposit address belongs to the whitelist and get deposit info including the required deposit amount for wallet signing authentication.</p>
+<h4 id='http-request-10'>HTTP Request</h4>
+<p><code>GET /api/v1/whitelist/verify</code></p>
+
+<p><strong>Parameters</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Located in</th>
+<th>Description</th>
+<th>Required</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-App-Key</td>
+<td>header</td>
+<td>app key</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>coin</td>
+<td>query</td>
+<td>coin name, e.g. USDT</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>chainType</td>
+<td>query</td>
+<td>chain type, e.g. ETH</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>address</td>
+<td>query</td>
+<td>wallet address to verify</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>depositAmount</td>
+<td>query</td>
+<td>deposit amount for pre-verification</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>signAddress</td>
+<td>query</td>
+<td>address used to sign the verification phrase</td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>chainAssetId</td>
+<td>query</td>
+<td>chain asset id</td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>query</td>
+<td>millisecond-level Unix timestamp (13 digits)</td>
+<td>Yes</td>
+<td>number</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>query</td>
+<td>HMAC SHA256 signature</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>nonce</td>
+<td>query</td>
+<td>nonce</td>
+<td>No</td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<p><strong>Response Result</strong></p>
+
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>assetId</td>
+<td>string</td>
+<td>coin name</td>
+</tr>
+<tr>
+<td>network</td>
+<td>string</td>
+<td>chain type</td>
+</tr>
+<tr>
+<td>chainType</td>
+<td>string</td>
+<td>blockchain network identifier</td>
+</tr>
+<tr>
+<td>depositAddress</td>
+<td>string</td>
+<td>verified deposit address</td>
+</tr>
+<tr>
+<td>memo</td>
+<td>string</td>
+<td>address memo</td>
+</tr>
+<tr>
+<td>depositAmount</td>
+<td>string</td>
+<td>deposit amount</td>
+</tr>
+<tr>
+<td>depositMinAmount</td>
+<td>string</td>
+<td>minimum deposit amount required</td>
+</tr>
+<tr>
+<td>signPhrase</td>
+<td>string</td>
+<td>phrase to be signed for wallet signing verification (present when signAddress is provided)</td>
+</tr>
+</tbody></table>
+<h3 id='wallet-signing-verification'>Wallet Signing Verification</h3>
+<p><strong>Summary:</strong> Submit wallet signing result to verify address ownership and add the address to the whitelist.</p>
+<h4 id='http-request-11'>HTTP Request</h4>
+<p><code>POST /api/v1/whitelist/walletSigning</code></p>
+
+<p><strong>Parameters</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Located in</th>
+<th>Description</th>
+<th>Required</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-App-Key</td>
+<td>header</td>
+<td>app key</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>coin</td>
+<td>body</td>
+<td>coin name, e.g. USDT</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>chainType</td>
+<td>body</td>
+<td>chain type, e.g. ETH</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>signAddress</td>
+<td>body</td>
+<td>address used to sign</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>signPhrase</td>
+<td>body</td>
+<td>phrase that was signed (obtained from Get Verify Whitelist Address)</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>signResult</td>
+<td>body</td>
+<td>signing result / signature</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>chainAssetId</td>
+<td>body</td>
+<td>chain asset id</td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>body</td>
+<td>millisecond-level Unix timestamp (13 digits)</td>
+<td>Yes</td>
+<td>number</td>
+</tr>
+<tr>
+<td>sign</td>
+<td>body</td>
+<td>HMAC SHA256 signature</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>nonce</td>
+<td>body</td>
+<td>nonce</td>
+<td>No</td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<p><strong>Response Result</strong></p>
+
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>signVerifyResult</td>
+<td>boolean</td>
+<td>whether the signature verification passed</td>
+</tr>
+<tr>
+<td>addResult</td>
+<td>boolean</td>
+<td>whether the address was successfully added to the whitelist</td>
+</tr>
+<tr>
+<td>whitelistedAddress</td>
+<td>string</td>
+<td>the address that was added to the whitelist (present when addResult is true)</td>
+</tr>
+</tbody></table>
 <h2 id='system'>System</h2><h3 id='current-timestamp'>current timestamp</h3><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>go run cmd/ctl/main.go <span class="s2">"appkey"</span> <span class="s2">"appsecret"</span> <span class="s2">"SystemGetTime"</span>
 code: 0
 message: success
@@ -1696,7 +1958,7 @@ data:
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get system current timestamp</p>
-<h4 id='http-request-10'>HTTP Request</h4>
+<h4 id='http-request-12'>HTTP Request</h4>
 <p><code>GET /api/v1/system/time</code></p>
 
 <p><strong>Parameters</strong></p>
@@ -1766,7 +2028,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">createWallet</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="s">"https://noti.domain/callback"</span><span class="o">,</span> <span class="s">"description"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> create a general wallet</p>
-<h4 id='http-request-11'>HTTP Request</h4>
+<h4 id='http-request-13'>HTTP Request</h4>
 <p><code>POST /api/v1/app</code> </p>
 
 <p><strong>Parameters</strong></p>
