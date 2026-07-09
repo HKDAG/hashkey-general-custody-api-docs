@@ -699,7 +699,72 @@ txid | string | transaction hash
 value | string | transaction value
 note | string | transfer note
 message | string | transfer message
+## 白名单
 
+### 白名单地址预存款校验
+
+**总结:** 校验充值地址是否属于白名单，并获取充值信息，包括钱包签名认证所需的充值金额。
+
+#### HTTP请求
+`GET /api/v1/whitelist/verify`
+
+**参数**
+
+| 名称 | 位置 | 描述 | 是否必需 | 类型 |
+| ---- | ---------- | ----------- | -------- | ---- |
+| X-App-Key | header | app key | Yes | string |
+| coin | query | 币种名称，如 USDT | Yes | string |
+| chainType | query | 链类型，如 ETH | Yes | string |
+| address | query | 待校验的钱包地址 | Yes | string |
+| depositAmount | query | 预存款校验金额 | Yes | string |
+| signAddress | query | 用于签名校验短语的地址 | No | string |
+| chainAssetId | query | 链上资产 ID | No | string |
+| timestamp | query | 毫秒级 Unix 时间戳（13位） | Yes | number |
+| sign | query | HMAC SHA256 签名 | Yes | string |
+| nonce | query | nonce | No | string |
+
+**响应结果**
+
+值 | 类型 | 描述
+--------- | ------- | ---------
+assetId | string | 币种名称
+network | string | 链类型
+chainType | string | 区块链网络标识
+depositAddress | string | 已验证的充值地址
+memo | string | 地址 memo
+depositAmount | string | 充值金额
+depositMinAmount | string | 最小充值金额要求
+signPhrase | string | 用于钱包签名验证的待签名短语（提供 signAddress 时返回）
+
+### 钱包签名验证
+
+**总结:** 提交钱包签名结果，验证地址所有权并将地址加入白名单。
+
+#### HTTP请求
+`POST /api/v1/whitelist/walletSigning`
+
+**参数**
+
+| 名称 | 位置 | 描述 | 是否必需 | 类型 |
+| ---- | ---------- | ----------- | -------- | ---- |
+| X-App-Key | header | app key | Yes | string |
+| coin | body | 币种名称，如 USDT | Yes | string |
+| chainType | body | 链类型，如 ETH | Yes | string |
+| signAddress | body | 用于签名的地址 | Yes | string |
+| signPhrase | body | 被签名的短语（从白名单地址预存款校验接口获取） | Yes | string |
+| signResult | body | 签名结果 | Yes | string |
+| chainAssetId | body | 链上资产 ID | No | string |
+| timestamp | body | 毫秒级 Unix 时间戳（13位） | Yes | number |
+| sign | body | HMAC SHA256 签名 | Yes | string |
+| nonce | body | nonce | No | string |
+
+**响应结果**
+
+值 | 类型 | 描述
+--------- | ------- | ---------
+signVerifyResult | boolean | 签名验证是否通过
+addResult | boolean | 地址是否成功加入白名单
+whitelistedAddress | string | 已加入白名单的地址（addResult 为 true 时返回）
 
 ## 系统
 

@@ -703,6 +703,73 @@ note | string | transfer note
 message | string | transfer message
 
 
+## Whitelist
+
+### Get Verify Whitelist Address
+
+**Summary:** Verify whether a deposit address belongs to the whitelist and get deposit info including the required deposit amount for wallet signing authentication.
+
+#### HTTP Request
+`GET /api/v1/whitelist/verify`
+
+**Parameters**
+
+| Name | Located in | Description | Required | Type |
+| ---- | ---------- | ----------- | -------- | ---- |
+| X-App-Key | header | app key | Yes | string |
+| coin | query | coin name, e.g. USDT | Yes | string |
+| chainType | query | chain type, e.g. ETH | Yes | string |
+| address | query | wallet address to verify | Yes | string |
+| depositAmount | query | deposit amount for pre-verification | Yes | string |
+| signAddress | query | address used to sign the verification phrase | No | string |
+| chainAssetId | query | chain asset id | No | string |
+| timestamp | query | millisecond-level Unix timestamp (13 digits) | Yes | number |
+| sign | query | HMAC SHA256 signature | Yes | string |
+| nonce | query | nonce | No | string |
+
+**Response Result**
+
+Value | Type | Description
+--------- | ------- | ---------
+assetId | string | coin name
+network | string | chain type
+chainType | string | blockchain network identifier
+depositAddress | string | verified deposit address
+memo | string | address memo
+depositAmount | string | deposit amount
+depositMinAmount | string | minimum deposit amount required
+signPhrase | string | phrase to be signed for wallet signing verification (present when signAddress is provided)
+
+### Wallet Signing Verification
+
+**Summary:** Submit wallet signing result to verify address ownership and add the address to the whitelist.
+
+#### HTTP Request
+`POST /api/v1/whitelist/walletSigning`
+
+**Parameters**
+
+| Name | Located in | Description | Required | Type |
+| ---- | ---------- | ----------- | -------- | ---- |
+| X-App-Key | header | app key | Yes | string |
+| coin | body | coin name, e.g. USDT | Yes | string |
+| chainType | body | chain type, e.g. ETH | Yes | string |
+| signAddress | body | address used to sign | Yes | string |
+| signPhrase | body | phrase that was signed (obtained from Get Verify Whitelist Address) | Yes | string |
+| signResult | body | signing result / signature | Yes | string |
+| chainAssetId | body | chain asset id | No | string |
+| timestamp | body | millisecond-level Unix timestamp (13 digits) | Yes | number |
+| sign | body | HMAC SHA256 signature | Yes | string |
+| nonce | body | nonce | No | string |
+
+**Response Result**
+
+Value | Type | Description
+--------- | ------- | ---------
+signVerifyResult | boolean | whether the signature verification passed
+addResult | boolean | whether the address was successfully added to the whitelist
+whitelistedAddress | string | the address that was added to the whitelist (present when addResult is true)
+
 ## System
 
 ### current timestamp
