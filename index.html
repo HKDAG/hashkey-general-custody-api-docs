@@ -439,7 +439,7 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Hashkey Custody provides a simple RESTful API and client SDK to integrate digital currency wallets with your application. Feel free to check out our <a href="https://github.com/HKDAG/hashkey-custody-sdk-nodejs.git">NodeJs SDK</a>, <a href="https://github.com/nbltrust/hashkey-custody-sdk-go">Go SDK</a>, <a href="https://github.com/HKDAG/jadepool-saas-sdk-java.git">Java SDK</a>.We have 2 level API, management API and wallet API.</p>
+<p>Hashkey Custody provides a simple and robust RESTful API and client SDK to integrate digital currency wallets with your application. Feel free to check out our <a href="https://github.com/HKDAG/hashkey-custody-sdk-nodejs.git">NodeJs SDK</a>, <a href="https://github.com/nbltrust/hashkey-custody-sdk-go">Go SDK</a>, <a href="https://github.com/HKDAG/jadepool-saas-sdk-java.git">Java SDK</a>.We have 2 level API, management API and wallet API.</p>
 
 <p>The management API enables the following:</p>
 
@@ -1753,34 +1753,13 @@ data:
 <td>signAddress</td>
 <td>query</td>
 <td>address used to sign the verification phrase</td>
-<td>No</td>
+<td>Yes</td>
 <td>string</td>
 </tr>
 <tr>
 <td>chainAssetId</td>
 <td>query</td>
 <td>chain asset id</td>
-<td>No</td>
-<td>string</td>
-</tr>
-<tr>
-<td>timestamp</td>
-<td>query</td>
-<td>millisecond-level Unix timestamp (13 digits)</td>
-<td>Yes</td>
-<td>number</td>
-</tr>
-<tr>
-<td>sign</td>
-<td>query</td>
-<td>HMAC SHA256 signature</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-<tr>
-<td>nonce</td>
-<td>query</td>
-<td>nonce</td>
 <td>No</td>
 <td>string</td>
 </tr>
@@ -1898,27 +1877,6 @@ data:
 <td>chainAssetId</td>
 <td>body</td>
 <td>chain asset id</td>
-<td>No</td>
-<td>string</td>
-</tr>
-<tr>
-<td>timestamp</td>
-<td>body</td>
-<td>millisecond-level Unix timestamp (13 digits)</td>
-<td>Yes</td>
-<td>number</td>
-</tr>
-<tr>
-<td>sign</td>
-<td>body</td>
-<td>HMAC SHA256 signature</td>
-<td>Yes</td>
-<td>string</td>
-</tr>
-<tr>
-<td>nonce</td>
-<td>body</td>
-<td>nonce</td>
 <td>No</td>
 <td>string</td>
 </tr>
