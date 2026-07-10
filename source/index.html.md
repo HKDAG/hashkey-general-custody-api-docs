@@ -721,11 +721,8 @@ message | string | transfer message
 | chainType | query | chain type, e.g. ETH | Yes | string |
 | address | query | wallet address to verify | Yes | string |
 | depositAmount | query | deposit amount for pre-verification | Yes | string |
-| signAddress | query | address used to sign the verification phrase | No | string |
+| signAddress | query | address used to sign the verification phrase | Yes | string |
 | chainAssetId | query | chain asset id | No | string |
-| timestamp | query | millisecond-level Unix timestamp (13 digits) | Yes | number |
-| sign | query | HMAC SHA256 signature | Yes | string |
-| nonce | query | nonce | No | string |
 
 **Response Result**
 
@@ -758,9 +755,6 @@ signPhrase | string | phrase to be signed for wallet signing verification (prese
 | signPhrase | body | phrase that was signed (obtained from Get Verify Whitelist Address) | Yes | string |
 | signResult | body | signing result / signature | Yes | string |
 | chainAssetId | body | chain asset id | No | string |
-| timestamp | body | millisecond-level Unix timestamp (13 digits) | Yes | number |
-| sign | body | HMAC SHA256 signature | Yes | string |
-| nonce | body | nonce | No | string |
 
 **Response Result**
 
