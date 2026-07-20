@@ -452,6 +452,23 @@ message | string | message to recipient of transfer
 createdAt | number |  unix timestamp, seconds
 relatedOrderId | string | related order id
 
+**`state` enumeration**
+
+Value | Description | Final state
+--------- | ------- | ---------
+WAITING | the order is waiting for review/approval | No
+PENDING | the order has been submitted and is confirming on chain | No
+DEPOSIT_FAIL | deposit only: the deposit failed to be credited | No
+ADDRESS_VERIFYING | deposit only: the deposit address is being verified | No
+KYT_REVIEWING | deposit only: the deposit is under KYT review | No
+MANUAL_AML | deposit only: the deposit is under manual AML review | No
+INCREASING_AMOUNT | deposit only: the deposit amount is being credited | No
+REFUNDING | deposit only: the deposit is being refunded | No
+REFUND | deposit only: the deposit has been refunded | Yes
+DONE | the order completed successfully | Yes
+TERMINATED | the order was terminated (e.g. rejected during review) | Yes
+FAILED | the order failed | Yes
+
 
 ### get wallet single order
 
@@ -534,6 +551,23 @@ note | string | order note
 message | string | message to recipient of transfer
 createdAt | number |  unix timestamp, seconds
 relatedOrderId | string | related order id
+
+**`state` enumeration**
+
+Value | Description | Final state
+--------- | ------- | ---------
+WAITING | the order is waiting for review/approval | No
+PENDING | the order has been submitted and is confirming on chain | No
+DEPOSIT_FAIL | deposit only: the deposit failed to be credited | No
+ADDRESS_VERIFYING | deposit only: the deposit address is being verified | No
+KYT_REVIEWING | deposit only: the deposit is under KYT review | No
+MANUAL_AML | deposit only: the deposit is under manual AML review | No
+INCREASING_AMOUNT | deposit only: the deposit amount is being credited | No
+REFUNDING | deposit only: the deposit is being refunded | No
+REFUND | deposit only: the deposit has been refunded | Yes
+DONE | the order completed successfully | Yes
+TERMINATED | the order was terminated (e.g. rejected during review) | Yes
+FAILED | the order failed | Yes
 
 
 ### update wallet order
@@ -703,67 +737,6 @@ note | string | transfer note
 message | string | transfer message
 
 
-## Whitelist
-
-### Get Verify Whitelist Address
-
-**Summary:** Verify whether a deposit address belongs to the whitelist and get deposit info including the required deposit amount for wallet signing authentication.
-
-#### HTTP Request
-`GET /api/v1/whitelist/verify`
-
-**Parameters**
-
-| Name | Located in | Description | Required | Type |
-| ---- | ---------- | ----------- | -------- | ---- |
-| X-App-Key | header | app key | Yes | string |
-| coin | query | coin name, e.g. USDT | Yes | string |
-| chainType | query | chain type, e.g. ETH | Yes | string |
-| address | query | wallet address to verify | Yes | string |
-| depositAmount | query | deposit amount for pre-verification | Yes | string |
-| signAddress | query | address used to sign the verification phrase | Yes | string |
-| chainAssetId | query | chain asset id | No | string |
-
-**Response Result**
-
-Value | Type | Description
---------- | ------- | ---------
-assetId | string | coin name
-network | string | chain type
-chainType | string | blockchain network identifier
-depositAddress | string | verified deposit address
-memo | string | address memo
-depositAmount | string | deposit amount
-depositMinAmount | string | minimum deposit amount required
-signPhrase | string | phrase to be signed for wallet signing verification (present when signAddress is provided)
-
-### Wallet Signing Verification
-
-**Summary:** Submit wallet signing result to verify address ownership and add the address to the whitelist.
-
-#### HTTP Request
-`POST /api/v1/whitelist/walletSigning`
-
-**Parameters**
-
-| Name | Located in | Description | Required | Type |
-| ---- | ---------- | ----------- | -------- | ---- |
-| X-App-Key | header | app key | Yes | string |
-| coin | body | coin name, e.g. USDT | Yes | string |
-| chainType | body | chain type, e.g. ETH | Yes | string |
-| signAddress | body | address used to sign | Yes | string |
-| signPhrase | body | phrase that was signed (obtained from Get Verify Whitelist Address) | Yes | string |
-| signResult | body | signing result / signature | Yes | string |
-| chainAssetId | body | chain asset id | No | string |
-
-**Response Result**
-
-Value | Type | Description
---------- | ------- | ---------
-signVerifyResult | boolean | whether the signature verification passed
-addResult | boolean | whether the address was successfully added to the whitelist
-whitelistedAddress | string | the address that was added to the whitelist (present when addResult is true)
-
 ## System
 
 ### current timestamp
@@ -912,6 +885,23 @@ value | string | transaction value
 confirmations | number | number of transaction confirmations
 fee | string | withdraw fee
 sign | string | hex string, sign parameters with HMACSHA256
+
+**`state` enumeration**
+
+Value | Description | Final state
+--------- | ------- | ---------
+WAITING | the order is waiting for review/approval | No
+PENDING | the order has been submitted and is confirming on chain | No
+DEPOSIT_FAIL | deposit only: the deposit failed to be credited | No
+ADDRESS_VERIFYING | deposit only: the deposit address is being verified | No
+KYT_REVIEWING | deposit only: the deposit is under KYT review | No
+MANUAL_AML | deposit only: the deposit is under manual AML review | No
+INCREASING_AMOUNT | deposit only: the deposit amount is being credited | No
+REFUNDING | deposit only: the deposit is being refunded | No
+REFUND | deposit only: the deposit has been refunded | Yes
+DONE | the order completed successfully | Yes
+TERMINATED | the order was terminated (e.g. rejected during review) | Yes
+FAILED | the order failed | Yes
 
 ### Signature
 In order to prove the message sender's identity, it should be verified by the following steps:
