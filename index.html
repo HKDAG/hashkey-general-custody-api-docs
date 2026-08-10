@@ -375,6 +375,9 @@
                     <a href="#whitelist" class="toc-h2 toc-link" data-title="Whitelist">Whitelist</a>
                       <ul class="toc-list-h3">
                           <li>
+                            <a href="#get-whitelist-addresses" class="toc-h3 toc-link" data-title="Get Whitelist Addresses">Get Whitelist Addresses</a>
+                          </li>
+                          <li>
                             <a href="#get-verify-whitelist-address" class="toc-h3 toc-link" data-title="Get Verify Whitelist Address">Get Verify Whitelist Address</a>
                           </li>
                           <li>
@@ -1861,9 +1864,111 @@ data:
 <td>transfer message</td>
 </tr>
 </tbody></table>
-<h2 id='whitelist'>Whitelist</h2><h3 id='get-verify-whitelist-address'>Get Verify Whitelist Address</h3>
-<p><strong>Summary:</strong> Verify whether a deposit address belongs to the whitelist and get deposit info including the required deposit amount for wallet signing authentication.</p>
+<h2 id='whitelist'>Whitelist</h2><h3 id='get-whitelist-addresses'>Get Whitelist Addresses</h3>
+<p><strong>Summary:</strong> Get the list of whitelisted addresses (deposit or withdraw).</p>
 <h4 id='http-request-10'>HTTP Request</h4>
+<p><code>GET /api/v1/whitelist/addresses</code></p>
+
+<p><strong>Parameters</strong></p>
+
+<table><thead>
+<tr>
+<th>Name</th>
+<th>Located in</th>
+<th>Description</th>
+<th>Required</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-App-Key</td>
+<td>header</td>
+<td>app key</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>chainType</td>
+<td>query</td>
+<td>chain type, e.g. ETH</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>bizType</td>
+<td>query</td>
+<td>business type, <code>deposit</code> or <code>withdraw</code>. Defaults to <code>deposit</code></td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>address</td>
+<td>query</td>
+<td>filter by a specific address</td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>auditStatus</td>
+<td>query</td>
+<td>filter by audit status</td>
+<td>No</td>
+<td>number</td>
+</tr>
+<tr>
+<td>page</td>
+<td>query</td>
+<td>page number, starting from 1. Defaults to 1</td>
+<td>No</td>
+<td>number</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>query</td>
+<td>number of rows per page. Defaults to 100</td>
+<td>No</td>
+<td>number</td>
+</tr>
+</tbody></table>
+
+<p><strong>Response Result</strong></p>
+
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>addresses</td>
+<td>array</td>
+<td>list of whitelisted addresses</td>
+</tr>
+<tr>
+<td>addresses[].coin</td>
+<td>string</td>
+<td>coin name</td>
+</tr>
+<tr>
+<td>addresses[].chainType</td>
+<td>string</td>
+<td>chain type</td>
+</tr>
+<tr>
+<td>addresses[].address</td>
+<td>string</td>
+<td>whitelisted address</td>
+</tr>
+<tr>
+<td>addresses[].auditStatus</td>
+<td>number</td>
+<td>audit status of the address</td>
+</tr>
+</tbody></table>
+<h3 id='get-verify-whitelist-address'>Get Verify Whitelist Address</h3>
+<p><strong>Summary:</strong> Verify whether a deposit address belongs to the whitelist and get deposit info including the required deposit amount for wallet signing authentication.</p>
+<h4 id='http-request-11'>HTTP Request</h4>
 <p><code>GET /api/v1/whitelist/verify</code></p>
 
 <p><strong>Parameters</strong></p>
@@ -1980,7 +2085,7 @@ data:
 </tbody></table>
 <h3 id='wallet-signing-verification'>Wallet Signing Verification</h3>
 <p><strong>Summary:</strong> Submit wallet signing result to verify address ownership and add the address to the whitelist.</p>
-<h4 id='http-request-11'>HTTP Request</h4>
+<h4 id='http-request-12'>HTTP Request</h4>
 <p><code>POST /api/v1/whitelist/walletSigning</code></p>
 
 <p><strong>Parameters</strong></p>
@@ -2079,7 +2184,7 @@ data:
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>Summary:</strong> get system current timestamp</p>
-<h4 id='http-request-12'>HTTP Request</h4>
+<h4 id='http-request-13'>HTTP Request</h4>
 <p><code>GET /api/v1/system/time</code></p>
 
 <p><strong>Parameters</strong></p>
@@ -2149,7 +2254,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">createWallet</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="s">"https://noti.domain/callback"</span><span class="o">,</span> <span class="s">"description"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>Summary:</strong> create a general wallet</p>
-<h4 id='http-request-13'>HTTP Request</h4>
+<h4 id='http-request-14'>HTTP Request</h4>
 <p><code>POST /api/v1/app</code> </p>
 
 <p><strong>Parameters</strong></p>

@@ -375,6 +375,9 @@
                     <a href="#8f74cd015b" class="toc-h2 toc-link" data-title="白名单">白名单</a>
                       <ul class="toc-list-h3">
                           <li>
+                            <a href="#bb7fb28cda" class="toc-h3 toc-link" data-title="获取白名单地址列表">获取白名单地址列表</a>
+                          </li>
+                          <li>
                             <a href="#9efa338ac2" class="toc-h3 toc-link" data-title="白名单地址预存款校验">白名单地址预存款校验</a>
                           </li>
                           <li>
@@ -1859,9 +1862,111 @@ data:
 <td>transfer message</td>
 </tr>
 </tbody></table>
-<h2 id='8f74cd015b'>白名单</h2><h3 id='9efa338ac2'>白名单地址预存款校验</h3>
-<p><strong>总结:</strong> 校验充值地址是否属于白名单，并获取充值信息，包括钱包签名认证所需的充值金额。</p>
+<h2 id='8f74cd015b'>白名单</h2><h3 id='bb7fb28cda'>获取白名单地址列表</h3>
+<p><strong>总结:</strong> 获取白名单地址列表（充值或提现）。</p>
 <h4 id='http-10'>HTTP请求</h4>
+<p><code>GET /api/v1/whitelist/addresses</code></p>
+
+<p><strong>参数</strong></p>
+
+<table><thead>
+<tr>
+<th>名称</th>
+<th>位置</th>
+<th>描述</th>
+<th>是否必需</th>
+<th>类型</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-App-Key</td>
+<td>header</td>
+<td>app key</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>chainType</td>
+<td>query</td>
+<td>链类型，如 ETH</td>
+<td>Yes</td>
+<td>string</td>
+</tr>
+<tr>
+<td>bizType</td>
+<td>query</td>
+<td>业务类型，<code>deposit</code>（充值）或 <code>withdraw</code>（提现），默认 <code>deposit</code></td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>address</td>
+<td>query</td>
+<td>按指定地址过滤</td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
+<td>auditStatus</td>
+<td>query</td>
+<td>按审核状态过滤</td>
+<td>No</td>
+<td>number</td>
+</tr>
+<tr>
+<td>page</td>
+<td>query</td>
+<td>页码，从 1 开始，默认 1</td>
+<td>No</td>
+<td>number</td>
+</tr>
+<tr>
+<td>amount</td>
+<td>query</td>
+<td>每页数量，默认 100</td>
+<td>No</td>
+<td>number</td>
+</tr>
+</tbody></table>
+
+<p><strong>响应结果</strong></p>
+
+<table><thead>
+<tr>
+<th>值</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>addresses</td>
+<td>array</td>
+<td>白名单地址列表</td>
+</tr>
+<tr>
+<td>addresses[].coin</td>
+<td>string</td>
+<td>币种名称</td>
+</tr>
+<tr>
+<td>addresses[].chainType</td>
+<td>string</td>
+<td>链类型</td>
+</tr>
+<tr>
+<td>addresses[].address</td>
+<td>string</td>
+<td>白名单地址</td>
+</tr>
+<tr>
+<td>addresses[].auditStatus</td>
+<td>number</td>
+<td>地址审核状态</td>
+</tr>
+</tbody></table>
+<h3 id='9efa338ac2'>白名单地址预存款校验</h3>
+<p><strong>总结:</strong> 校验充值地址是否属于白名单，并获取充值信息，包括钱包签名认证所需的充值金额。</p>
+<h4 id='http-11'>HTTP请求</h4>
 <p><code>GET /api/v1/whitelist/verify</code></p>
 
 <p><strong>参数</strong></p>
@@ -1978,7 +2083,7 @@ data:
 </tbody></table>
 <h3 id='7e04af0106'>钱包签名验证</h3>
 <p><strong>总结:</strong> 提交钱包签名结果，验证地址所有权并将地址加入白名单。</p>
-<h4 id='http-11'>HTTP请求</h4>
+<h4 id='http-12'>HTTP请求</h4>
 <p><code>POST /api/v1/whitelist/walletSigning</code></p>
 
 <p><strong>参数</strong></p>
@@ -2077,7 +2182,7 @@ data:
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>总结:</strong> 获取系统当前时间戳</p>
-<h4 id='http-12'>HTTP请求</h4>
+<h4 id='http-13'>HTTP请求</h4>
 <p><code>GET /api/v1/system/time</code></p>
 
 <p><strong>参数</strong></p>
@@ -2147,7 +2252,7 @@ data:
 </code></pre></div><div class="highlight"><pre class="highlight java tab-java"><code>  <span class="nc">APIResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">companyTest</span><span class="o">.</span><span class="na">createWallet</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="s">""</span><span class="o">,</span> <span class="s">"https://noti.domain/callback"</span><span class="o">,</span> <span class="s">"description"</span><span class="o">);</span>
 </code></pre></div>
 <p><strong>总结:</strong> 创建钱包</p>
-<h4 id='http-13'>HTTP请求</h4>
+<h4 id='http-14'>HTTP请求</h4>
 <p><code>POST /api/v1/app</code> </p>
 
 <p><strong>参数</strong></p>
