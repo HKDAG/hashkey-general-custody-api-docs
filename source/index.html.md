@@ -746,6 +746,35 @@ message | string | transfer message
 
 ## Whitelist
 
+### Get Whitelist Addresses
+
+**Summary:** Get the list of whitelisted addresses (deposit or withdraw).
+
+#### HTTP Request
+`GET /api/v1/whitelist/addresses`
+
+**Parameters**
+
+| Name | Located in | Description | Required | Type |
+| ---- | ---------- | ----------- | -------- | ---- |
+| X-App-Key | header | app key | Yes | string |
+| chainType | query | chain type, e.g. ETH | Yes | string |
+| bizType | query | business type, `deposit` or `withdraw`. Defaults to `deposit` | No | string |
+| address | query | filter by a specific address | No | string |
+| auditStatus | query | filter by audit status | No | number |
+| page | query | page number, starting from 1. Defaults to 1 | No | number |
+| amount | query | number of rows per page. Defaults to 100 | No | number |
+
+**Response Result**
+
+Value | Type | Description
+--------- | ------- | ---------
+addresses | array | list of whitelisted addresses
+addresses[].coin | string | coin name
+addresses[].chainType | string | chain type
+addresses[].address | string | whitelisted address
+addresses[].auditStatus | number | audit status of the address
+
 ### Get Verify Whitelist Address
 
 **Summary:** Verify whether a deposit address belongs to the whitelist and get deposit info including the required deposit amount for wallet signing authentication.

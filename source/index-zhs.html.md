@@ -742,6 +742,35 @@ note | string | transfer note
 message | string | transfer message
 ## 白名单
 
+### 获取白名单地址列表
+
+**总结:** 获取白名单地址列表（充值或提现）。
+
+#### HTTP请求
+`GET /api/v1/whitelist/addresses`
+
+**参数**
+
+| 名称 | 位置 | 描述 | 是否必需 | 类型 |
+| ---- | ---------- | ----------- | -------- | ---- |
+| X-App-Key | header | app key | Yes | string |
+| chainType | query | 链类型，如 ETH | Yes | string |
+| bizType | query | 业务类型，`deposit`（充值）或 `withdraw`（提现），默认 `deposit` | No | string |
+| address | query | 按指定地址过滤 | No | string |
+| auditStatus | query | 按审核状态过滤 | No | number |
+| page | query | 页码，从 1 开始，默认 1 | No | number |
+| amount | query | 每页数量，默认 100 | No | number |
+
+**响应结果**
+
+值 | 类型 | 描述
+--------- | ------- | ---------
+addresses | array | 白名单地址列表
+addresses[].coin | string | 币种名称
+addresses[].chainType | string | 链类型
+addresses[].address | string | 白名单地址
+addresses[].auditStatus | number | 地址审核状态
+
 ### 白名单地址预存款校验
 
 **总结:** 校验充值地址是否属于白名单，并获取充值信息，包括钱包签名认证所需的充值金额。
