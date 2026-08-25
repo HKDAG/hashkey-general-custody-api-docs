@@ -622,6 +622,7 @@ data:
   "fee": "0.0050000000",
   "from": "",
   "id": "Jd7qbDRa1qM1lxK5Qe2M",
+  "withdrawID": "7Cab38EA42538f4D8C2",
   "memo": "",
   "n": 0,
   "state": "INIT",
@@ -665,6 +666,7 @@ confirmations | number | number of transaction confirmations
 fee | string | fee burnt for the transaction
 from | string | transaction input
 id | string | order id
+withdrawID | string | withdraw id
 memo | string | address memo
 n | number | order index
 state | string | order state
@@ -788,6 +790,7 @@ addresses[].auditStatus | number | 地址审核状态
 | address | query | 待校验的钱包地址 | Yes | string |
 | depositAmount | query | 预存款校验金额 | Yes | string |
 | signAddress | query | 用于签名校验短语的地址 | Yes | string |
+| depositAddress | query | 指定充值地址 | No | string |
 | chainAssetId | query | 链上资产 ID | No | string |
 
 **响应结果**
@@ -797,7 +800,7 @@ addresses[].auditStatus | number | 地址审核状态
 assetId | string | 币种名称
 network | string | 链类型
 chainType | string | 区块链网络标识
-depositAddress | string | 已验证的充值地址
+depositAddress | string | 充值地址
 memo | string | 地址 memo
 depositAmount | string | 充值金额
 depositMinAmount | string | 最小充值金额要求

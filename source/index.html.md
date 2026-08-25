@@ -624,6 +624,7 @@ data:
   "fee": "0.0050000000",
   "from": "",
   "id": "Jd7qbDRa1qM1lxK5Qe2M",
+  "withdrawID": "7Cab38EA42538f4D8C2",
   "memo": "",
   "n": 0,
   "state": "INIT",
@@ -667,6 +668,7 @@ confirmations | number | number of transaction confirmations
 fee | string | fee burnt for the transaction
 from | string | transaction input
 id | string | order id
+withdrawID | string | withdraw id
 memo | string | address memo
 n | number | order index
 state | string | order state
@@ -792,6 +794,7 @@ addresses[].auditStatus | number | audit status of the address
 | address | query | wallet address to verify | Yes | string |
 | depositAmount | query | deposit amount for pre-verification | Yes | string |
 | signAddress | query | address used to sign the verification phrase | Yes | string |
+| depositAddress | query | specify deposit address | No | string |
 | chainAssetId | query | chain asset id | No | string |
 
 **Response Result**
@@ -801,7 +804,7 @@ Value | Type | Description
 assetId | string | coin name
 network | string | chain type
 chainType | string | blockchain network identifier
-depositAddress | string | verified deposit address
+depositAddress | string | deposit address
 memo | string | address memo
 depositAmount | string | deposit amount
 depositMinAmount | string | minimum deposit amount required
