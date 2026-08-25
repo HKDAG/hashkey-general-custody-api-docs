@@ -1520,6 +1520,7 @@ data:
   <span class="s2">"fee"</span>: <span class="s2">"0.0050000000"</span>,
   <span class="s2">"from"</span>: <span class="s2">""</span>,
   <span class="s2">"id"</span>: <span class="s2">"Jd7qbDRa1qM1lxK5Qe2M"</span>,
+  <span class="s2">"withdrawID"</span>: <span class="s2">"7Cab38EA42538f4D8C2"</span>,
   <span class="s2">"memo"</span>: <span class="s2">""</span>,
   <span class="s2">"n"</span>: 0,
   <span class="s2">"state"</span>: <span class="s2">"INIT"</span>,
@@ -1646,6 +1647,11 @@ data:
 <td>id</td>
 <td>string</td>
 <td>order id</td>
+</tr>
+<tr>
+<td>withdrawID</td>
+<td>string</td>
+<td>withdraw id</td>
 </tr>
 <tr>
 <td>memo</td>
@@ -2023,6 +2029,13 @@ data:
 <td>string</td>
 </tr>
 <tr>
+<td>depositAddress</td>
+<td>query</td>
+<td>指定充值地址</td>
+<td>No</td>
+<td>string</td>
+</tr>
+<tr>
 <td>chainAssetId</td>
 <td>query</td>
 <td>链上资产 ID</td>
@@ -2058,7 +2071,7 @@ data:
 <tr>
 <td>depositAddress</td>
 <td>string</td>
-<td>已验证的充值地址</td>
+<td>充值地址</td>
 </tr>
 <tr>
 <td>memo</td>
