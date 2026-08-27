@@ -457,7 +457,7 @@ value | string | transaction value
 note | string | order note
 message | string | message to recipient of transfer
 createdAt | number |  unix timestamp, seconds
-relatedOrderId | string | related order id
+withdrawID | string | withdraw id
 
 **`state` enumeration**
 
@@ -502,7 +502,7 @@ data:
   "note": "note",
   "message": "",
   "createdAt": 1569306519,
-  "relatedOrderId": "orderrNXBQGJlw09apVyg4nDo"
+  "withdrawID": "7Cab38EA42538f4D8C2"
 }
 ```
 
@@ -557,7 +557,7 @@ value | string | transaction value
 note | string | order note
 message | string | message to recipient of transfer
 createdAt | number |  unix timestamp, seconds
-relatedOrderId | string | related order id
+withdrawID | string | withdraw id
 
 **`state` enumeration**
 

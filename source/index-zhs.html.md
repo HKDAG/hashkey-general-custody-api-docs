@@ -459,7 +459,7 @@ value | string | 交易值
 note | string | 订单备注
 message | string | 转账消息
 createdAt | number | 创建时间(unix时间戳, 秒)
-relatedOrderId | string | 关联订单ID
+withdrawID | string | 提币ID
 
 **`state` 状态枚举**
 
@@ -501,7 +501,9 @@ data:
   "type": "ETH",
   "value": "0.045000000000000000",
   "note": "note",
-  "message": ""
+  "message": "",
+  "createdAt": 1569306519,
+  "withdrawID": "7Cab38EA42538f4D8C2"
 }
 ```
 
@@ -556,7 +558,7 @@ value | string | 交易值
 note | string | 订单备注
 message | string | 转账消息
 createdAt | number | 创建时间(unix时间戳, 秒)
-relatedOrderId | string | 关联订单ID
+withdrawID | string | 提币ID
 
 **`state` 状态枚举**
 
