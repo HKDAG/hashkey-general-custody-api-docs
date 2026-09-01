@@ -69,7 +69,7 @@ This is the general request structure for verifing the request by server.
 
 | Name | Located in | Description | Required | Type |
 | ---- | ---------- | ----------- | -------- | ---- |
-| timestamp | query/body | unix timestamp, seconds | Yes | string |
+| timestamp | query/body | unix timestamp, milliseconds | Yes | string |
 | nonce | query/body | nonce, random string, not repeated in 10 minutes | Yes | string |
 | sign | query/body | hex string, sign parameters with HMACSHA256 | Yes | string |
 
@@ -79,7 +79,7 @@ if POST request, the body looks like this:
 
 `
 { 
-  "timestamp": 1583376284,
+  "timestamp": 1583376284000,
   "nonce": "15833762841261615239762485",
   "mode": "auto",
   "sign":"7042a9fd6deea017be7ad76dfb48e4c36feca279819630c870a628f5352c9044"
@@ -89,7 +89,7 @@ if POST request, the body looks like this:
 if GET request, the url looks like this:
 
 `
-/api/v1/app/balance/ETH?timestamp=1583374390&nonce=1583374390314165815853245&sign=7c482cf15d9d25772eee2c43bd146c8136472a055b4587b9fb22d02720037875
+/api/v1/app/balance/ETH?timestamp=1583374390000&nonce=1583374390314165815853245&sign=7c482cf15d9d25772eee2c43bd146c8136472a055b4587b9fb22d02720037875
 `
 
 <font size=4>The [signature method](#signature) is similar to OAuth.</font>
@@ -291,7 +291,7 @@ assets:
 Value | Type | Description
 --------- | ------- | ---------
 network | string | the network of the coin
-coin | string | the coin name
+coinName | string | the coin name
 
 ### get wallet balances
 
@@ -363,7 +363,7 @@ Value | Type | Description
 --------- | ------- | ---------
 balance | string | the coin balance
 money | string | the amount(USD) equal to the balance
-name | string | the coin name
+coinName | string | the coin name
 price | string | the coin price(USD)
 outLocked | string | the coin transfer out amount under locked
 
@@ -388,7 +388,7 @@ data:
     "n": 0,
     "state": "DONE",
     "to": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
-    "txid": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
+    "txHash": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
     "type": "ETH",
     "value": "0.045000000000000000"
   }]
@@ -425,7 +425,7 @@ data:
 | X-App-Key | header | app key | Yes | string |
 | page | query | page, e.g. 1 | Yes | string |
 | amount | query | item count on this page, e.g. 10 | Yes | string |
-| coins | query | coin list, can be empty string | No | string |
+| coinNames | query | coin list, can be empty string | No | string |
 | state | query | order state, can be empty string | No | string |
 | bizType | query | order type, TRANSFER_IN/TRANSFER_OUT/WITHDRAW/DEPOSIT | No | string |
 
@@ -451,12 +451,12 @@ memo | string | order memo
 n | number | order index
 state | string | order state
 to | string | transaction output
-txid | string | transaction hash
+txHash | string | transaction hash
 type | string | network type
 value | string | transaction value
 note | string | order note
 message | string | message to recipient of transfer
-createdAt | number |  unix timestamp, seconds
+createdAt | number |  unix timestamp, milliseconds
 withdrawID | string | withdraw id
 
 **`state` enumeration**
@@ -496,12 +496,12 @@ data:
   "n": 0,
   "state": "DONE",
   "to": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
-  "txid": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
+  "txHash": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
   "type": "ETH",
   "value": "0.045000000000000000",
   "note": "note",
   "message": "",
-  "createdAt": 1569306519,
+  "createdAt": 1569306519000,
   "withdrawID": "7Cab38EA42538f4D8C2"
 }
 ```
@@ -551,12 +551,12 @@ memo | string | order memo
 n | number | order index
 state | string | order state
 to | string | transaction output
-txid | string | transaction hash
+txHash | string | transaction hash
 type | string | network type
 value | string | transaction value
 note | string | order note
 message | string | message to recipient of transfer
-createdAt | number |  unix timestamp, seconds
+createdAt | number |  unix timestamp, milliseconds
 withdrawID | string | withdraw id
 
 **`state` enumeration**
@@ -629,7 +629,7 @@ data:
   "n": 0,
   "state": "INIT",
   "to": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
-  "txid": "",
+  "txHash": "",
   "type": "ETH",
   "value": "0.0450000000"
 }
@@ -650,7 +650,7 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
 | coinName | path | coin type | Yes | string |
-| id | body | withdraw id | Yes | string |
+| withdrawID | body | withdraw id | Yes | string |
 | to | body | receive address | Yes | string |
 | value | body | withdraw amount | Yes | string |
 | memo | body | address memo | No | string |
@@ -673,7 +673,7 @@ memo | string | address memo
 n | number | order index
 state | string | order state
 to | string | transaction output
-txid | string | transaction hash
+txHash | string | transaction hash
 type | string | network type
 value | string | transaction value
 note | string | order note
@@ -698,7 +698,7 @@ data:
   "note": "",
   "state": "DONE",
   "to": "e5dJyVp8R3B1m4o",
-  "txid": "",
+  "txHash": "",
   "type": "ETH",
   "value": "0.01"
 }
@@ -719,7 +719,7 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
 | coinName | path | coin type | Yes | string |
-| id | body | transfer id | Yes | string |
+| transferID | body | transfer id | Yes | string |
 | to | body | receive wallet id | Yes | string |
 | value | body | transfer amount | Yes | string |
 | note | body | transfer note, can be empty string | Yes | string |
@@ -736,11 +736,12 @@ confirmations | number | number of transaction confirmations
 fee | string | fee burnt for the transaction
 from | string | transaction input
 id | string | order id
+transferID | string | transfer id
 memo | string | order note
 n | number | order index
 state | string | order state
 to | string | transaction output
-txid | string | transaction hash
+txHash | string | transaction hash
 value | string | transaction value
 note | string | transfer note
 message | string | transfer message
@@ -772,7 +773,7 @@ message | string | transfer message
 Value | Type | Description
 --------- | ------- | ---------
 addresses | array | list of whitelisted addresses
-addresses[].coin | string | coin name
+addresses[].coinName | string | coin name
 addresses[].chainType | string | chain type
 addresses[].address | string | whitelisted address
 addresses[].auditStatus | number | audit status of the address
@@ -789,7 +790,7 @@ addresses[].auditStatus | number | audit status of the address
 | Name | Located in | Description | Required | Type |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
-| coin | query | coin name, e.g. USDT | Yes | string |
+| coinName | query | coin name, e.g. USDT | Yes | string |
 | chainType | query | chain type, e.g. ETH | Yes | string |
 | address | query | wallet address to verify | Yes | string |
 | depositAmount | query | deposit amount for pre-verification | Yes | string |
@@ -801,7 +802,7 @@ addresses[].auditStatus | number | audit status of the address
 
 Value | Type | Description
 --------- | ------- | ---------
-assetId | string | coin name
+coinName | string | coin name
 network | string | chain type
 chainType | string | blockchain network identifier
 depositAddress | string | deposit address
@@ -822,7 +823,7 @@ signPhrase | string | phrase to be signed for wallet signing verification (prese
 | Name | Located in | Description | Required | Type |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
-| coin | body | coin name, e.g. USDT | Yes | string |
+| coinName | body | coin name, e.g. USDT | Yes | string |
 | chainType | body | chain type, e.g. ETH | Yes | string |
 | signAddress | body | address used to sign | Yes | string |
 | signPhrase | body | phrase that was signed (obtained from Get Verify Whitelist Address) | Yes | string |
@@ -847,7 +848,7 @@ code: 0
 message: success
 data:
 {
-  "timestamp": 1590391287
+  "timestamp": 1590391287000
 }
 ```
 
@@ -866,7 +867,7 @@ data:
 
 Value | Type | Description
 --------- | ------- | ---------
-timestamp | number | current timestamp
+timestamp | number | current timestamp, milliseconds
 
 # Management API
 
@@ -963,7 +964,7 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
-  "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
+  "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
   "confirmations": 27,
   "sign": "fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3"
 }
@@ -976,7 +977,7 @@ Value | Type | Description
 id | string | the order ID
 withdrawID | string | withdraw id
 coinName | string | unique token name
-txid | string | transaction hash
+txHash | string | transaction hash
 state | string | order state
 bizType | string | order type
 from | string | transaction input, the value of withdraw order is empty
@@ -1021,7 +1022,7 @@ In order to prove the message sender's identity, it should be verified by the fo
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
-  "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
+  "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
   "confirmations": 27
 }
 `
@@ -1029,7 +1030,7 @@ In order to prove the message sender's identity, it should be verified by the fo
     The message string looks like this:
 </br>
 `
-affirmativeConfirmation=20&bizType=DEPOSIT&block=13721091&coinName=ETH&confirmations=27&fee=0.000000000000000000&from=0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&id=2XB0eKAvj7KvjZDk59zl&memo=&n=0&state=DONE&to=0x29152c850456899A78178622B6543BBFfC224495&txid=0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&type=ETH&value=1.000000000000000000&withdrawID=7Cab38EA42538f4D8C2
+affirmativeConfirmation=20&bizType=DEPOSIT&block=13721091&coinName=ETH&confirmations=27&fee=0.000000000000000000&from=0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&id=2XB0eKAvj7KvjZDk59zl&memo=&n=0&state=DONE&to=0x29152c850456899A78178622B6543BBFfC224495&txHash=0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&type=ETH&value=1.000000000000000000&withdrawID=7Cab38EA42538f4D8C2
 `
 
 2. Sign the message using HMAC-SHA256. If the AppSecret is `exzYZT8IubM9Jxq1PWU5QjZ0JFP81bvCmlf1fFjW0b87Zr6eAMdofeYlhAMZxPzo`, the sign param would be like this:
@@ -1039,7 +1040,7 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 `
 
 # Signature
-1. Get the current timestamp (seconds) and the nonce (random string). Please make sure the timestamp error not exceed 5 minutes and the nonce not repeated in 10 minutes.
+1. Get the current timestamp (milliseconds) and the nonce (random string). Please make sure the timestamp error not exceed 5 minutes and the nonce not repeated in 10 minutes.
 
 2. Form a String message (sorted) that contains data prarams, the timestamp and nonce above. 
 
@@ -1054,7 +1055,7 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
     The message string looks like this:
 </br>
 `
-mode=auto&nonce=15833762841261615239762485&timestamp=1583376284
+mode=auto&nonce=15833762841261615239762485&timestamp=1583376284000
 `
 
 3. Sign the message using HMAC-SHA256. If the AppSecret is `yeTJ3EnOkyQQEjhTMVqn165Dqjp43bhTwXLIv25Ycdu8qwDOyqpa0WV54C6sO4HW`, the sign param would be like this:
