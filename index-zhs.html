@@ -519,7 +519,7 @@
 <tr>
 <td>timestamp</td>
 <td>query/body</td>
-<td>unix timestamp, seconds</td>
+<td>unix timestamp, milliseconds</td>
 <td>Yes</td>
 <td>string</td>
 </tr>
@@ -545,7 +545,7 @@
 
 <p><code>
 { 
-  &quot;timestamp&quot;: 1583376284,
+  &quot;timestamp&quot;: 1583376284000,
   &quot;nonce&quot;: &quot;15833762841261615239762485&quot;,
   &quot;mode&quot;: &quot;auto&quot;,
   &quot;sign&quot;:&quot;7042a9fd6deea017be7ad76dfb48e4c36feca279819630c870a628f5352c9044&quot;
@@ -555,7 +555,7 @@
 <p>如果是 GET 请求, url 结构如下:</p>
 
 <p><code>
-/api/v1/app/balance/ETH?timestamp=1583374390&amp;nonce=1583374390314165815853245&amp;sign=7c482cf15d9d25772eee2c43bd146c8136472a055b4587b9fb22d02720037875
+/api/v1/app/balance/ETH?timestamp=1583374390000&amp;nonce=1583374390314165815853245&amp;sign=7c482cf15d9d25772eee2c43bd146c8136472a055b4587b9fb22d02720037875
 </code></p>
 
 <p><font size=4> <a href="#signature">签名方式</a> 类似于 OAuth.</font></p>
@@ -817,7 +817,7 @@ data:
 <td>币种所属网络</td>
 </tr>
 <tr>
-<td>coin</td>
+<td>coinName</td>
 <td>string</td>
 <td>币种名称</td>
 </tr>
@@ -920,7 +920,7 @@ data:
 <td>币种余额对应的美元价值</td>
 </tr>
 <tr>
-<td>name</td>
+<td>coinName</td>
 <td>string</td>
 <td>币种名称</td>
 </tr>
@@ -953,7 +953,7 @@ data:
     <span class="s2">"n"</span>: 0,
     <span class="s2">"state"</span>: <span class="s2">"DONE"</span>,
     <span class="s2">"to"</span>: <span class="s2">"0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072"</span>,
-    <span class="s2">"txid"</span>: <span class="s2">"0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d"</span>,
+    <span class="s2">"txHash"</span>: <span class="s2">"0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d"</span>,
     <span class="s2">"type"</span>: <span class="s2">"ETH"</span>,
     <span class="s2">"value"</span>: <span class="s2">"0.045000000000000000"</span>
   <span class="o">}]</span>
@@ -1005,7 +1005,7 @@ data:
 <td>string</td>
 </tr>
 <tr>
-<td>coins</td>
+<td>coinNames</td>
 <td>query</td>
 <td>coin list, can be empty string</td>
 <td>No</td>
@@ -1113,7 +1113,7 @@ data:
 <td>交易输出</td>
 </tr>
 <tr>
-<td>txid</td>
+<td>txHash</td>
 <td>string</td>
 <td>交易哈希</td>
 </tr>
@@ -1140,7 +1140,7 @@ data:
 <tr>
 <td>createdAt</td>
 <td>number</td>
-<td>创建时间(unix时间戳, 秒)</td>
+<td>创建时间(unix时间戳, 毫秒)</td>
 </tr>
 <tr>
 <td>withdrawID</td>
@@ -1235,12 +1235,12 @@ data:
   <span class="s2">"n"</span>: 0,
   <span class="s2">"state"</span>: <span class="s2">"DONE"</span>,
   <span class="s2">"to"</span>: <span class="s2">"0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072"</span>,
-  <span class="s2">"txid"</span>: <span class="s2">"0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d"</span>,
+  <span class="s2">"txHash"</span>: <span class="s2">"0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d"</span>,
   <span class="s2">"type"</span>: <span class="s2">"ETH"</span>,
   <span class="s2">"value"</span>: <span class="s2">"0.045000000000000000"</span>,
   <span class="s2">"note"</span>: <span class="s2">"note"</span>,
   <span class="s2">"message"</span>: <span class="s2">""</span>,
-  <span class="s2">"createdAt"</span>: 1569306519,
+  <span class="s2">"createdAt"</span>: 1569306519000,
   <span class="s2">"withdrawID"</span>: <span class="s2">"7Cab38EA42538f4D8C2"</span>
 <span class="o">}</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code>    <span class="k">try</span> <span class="p">{</span>
@@ -1349,7 +1349,7 @@ data:
 <td>交易输出</td>
 </tr>
 <tr>
-<td>txid</td>
+<td>txHash</td>
 <td>string</td>
 <td>交易哈希</td>
 </tr>
@@ -1376,7 +1376,7 @@ data:
 <tr>
 <td>createdAt</td>
 <td>number</td>
-<td>创建时间(unix时间戳, 秒)</td>
+<td>创建时间(unix时间戳, 毫秒)</td>
 </tr>
 <tr>
 <td>withdrawID</td>
@@ -1527,7 +1527,7 @@ data:
   <span class="s2">"n"</span>: 0,
   <span class="s2">"state"</span>: <span class="s2">"INIT"</span>,
   <span class="s2">"to"</span>: <span class="s2">"0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072"</span>,
-  <span class="s2">"txid"</span>: <span class="s2">""</span>,
+  <span class="s2">"txHash"</span>: <span class="s2">""</span>,
   <span class="s2">"type"</span>: <span class="s2">"ETH"</span>,
   <span class="s2">"value"</span>: <span class="s2">"0.0450000000"</span>
 <span class="o">}</span>
@@ -1563,7 +1563,7 @@ data:
 <td>string</td>
 </tr>
 <tr>
-<td>id</td>
+<td>withdrawID</td>
 <td>body</td>
 <td>withdraw id</td>
 <td>Yes</td>
@@ -1676,7 +1676,7 @@ data:
 <td>transaction output</td>
 </tr>
 <tr>
-<td>txid</td>
+<td>txHash</td>
 <td>string</td>
 <td>transaction hash</td>
 </tr>
@@ -1713,7 +1713,7 @@ data:
   <span class="s2">"note"</span>: <span class="s2">""</span>,
   <span class="s2">"state"</span>: <span class="s2">"DONE"</span>,
   <span class="s2">"to"</span>: <span class="s2">"e5dJyVp8R3B1m4o"</span>,
-  <span class="s2">"txid"</span>: <span class="s2">""</span>,
+  <span class="s2">"txHash"</span>: <span class="s2">""</span>,
   <span class="s2">"type"</span>: <span class="s2">"ETH"</span>,
   <span class="s2">"value"</span>: <span class="s2">"0.01"</span>
 <span class="o">}</span>
@@ -1749,7 +1749,7 @@ data:
 <td>string</td>
 </tr>
 <tr>
-<td>id</td>
+<td>transferID</td>
 <td>body</td>
 <td>transfer id</td>
 <td>Yes</td>
@@ -1830,6 +1830,11 @@ data:
 <td>order id</td>
 </tr>
 <tr>
+<td>transferID</td>
+<td>string</td>
+<td>transfer id</td>
+</tr>
+<tr>
 <td>memo</td>
 <td>string</td>
 <td>order note</td>
@@ -1850,7 +1855,7 @@ data:
 <td>transaction output</td>
 </tr>
 <tr>
-<td>txid</td>
+<td>txHash</td>
 <td>string</td>
 <td>transaction hash</td>
 </tr>
@@ -1952,7 +1957,7 @@ data:
 <td>白名单地址列表</td>
 </tr>
 <tr>
-<td>addresses[].coin</td>
+<td>addresses[].coinName</td>
 <td>string</td>
 <td>币种名称</td>
 </tr>
@@ -1996,7 +2001,7 @@ data:
 <td>string</td>
 </tr>
 <tr>
-<td>coin</td>
+<td>coinName</td>
 <td>query</td>
 <td>币种名称，如 USDT</td>
 <td>Yes</td>
@@ -2056,7 +2061,7 @@ data:
 </tr>
 </thead><tbody>
 <tr>
-<td>assetId</td>
+<td>coinName</td>
 <td>string</td>
 <td>币种名称</td>
 </tr>
@@ -2120,7 +2125,7 @@ data:
 <td>string</td>
 </tr>
 <tr>
-<td>coin</td>
+<td>coinName</td>
 <td>body</td>
 <td>币种名称，如 USDT</td>
 <td>Yes</td>
@@ -2193,7 +2198,7 @@ code: 0
 message: success
 data:
 <span class="o">{</span>
-  <span class="s2">"timestamp"</span>: 1590391287
+  <span class="s2">"timestamp"</span>: 1590391287000
 <span class="o">}</span>
 </code></pre></div>
 <p><strong>总结:</strong> 获取系统当前时间戳</p>
@@ -2232,7 +2237,7 @@ data:
 <tr>
 <td>timestamp</td>
 <td>number</td>
-<td>current timestamp</td>
+<td>current timestamp, milliseconds</td>
 </tr>
 </tbody></table>
 <h1 id='api-3'>企业 API</h1><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="nv">$ </span>git clone https://github.com/nbltrust/hashkey-custody-sdk-golang.git <span class="o">&amp;&amp;</span> <span class="nb">cd </span>hashkey-custody-sdk-golang
@@ -2357,7 +2362,7 @@ data:
   </span><span class="nl">"fee"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.000000000000000000"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"from"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x29152c850456899A78178622B6543BBFfC224495"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"txid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"txHash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"confirmations"</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w">
   </span><span class="nl">"sign"</span><span class="p">:</span><span class="w"> </span><span class="s2">"796dde931a15c98edc3dfdb65a2c2addfde422f217a1f6934be9226542839aa0"</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2387,7 +2392,7 @@ data:
 <td>币种名称</td>
 </tr>
 <tr>
-<td>txid</td>
+<td>txHash</td>
 <td>string</td>
 <td>交易哈希</td>
 </tr>
@@ -2522,7 +2527,7 @@ data:
 &quot;fee&quot;: &quot;0.000000000000000000&quot;,
 &quot;from&quot;: &quot;0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&quot;,
 &quot;to&quot;: &quot;0x29152c850456899A78178622B6543BBFfC224495&quot;,
-&quot;txid&quot;: &quot;0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&quot;,
+&quot;txHash&quot;: &quot;0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&quot;,
 &quot;confirmations&quot;: 27
 }
 </code></p>
@@ -2530,7 +2535,7 @@ data:
 <p>消息字符串如下:
 </br>
 <code>
-affirmativeConfirmation=20&amp;bizType=DEPOSIT&amp;block=13721091&amp;coinName=ETH&amp;confirmations=27&amp;fee=0.000000000000000000&amp;from=0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&amp;id=2XB0eKAvj7KvjZDk59zl&amp;memo=&amp;n=0&amp;state=DONE&amp;to=0x29152c850456899A78178622B6543BBFfC224495&amp;txid=0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&amp;type=ETH&amp;value=1.000000000000000000&amp;withdrawID=7Cab38EA42538f4D8C2
+affirmativeConfirmation=20&amp;bizType=DEPOSIT&amp;block=13721091&amp;coinName=ETH&amp;confirmations=27&amp;fee=0.000000000000000000&amp;from=0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&amp;id=2XB0eKAvj7KvjZDk59zl&amp;memo=&amp;n=0&amp;state=DONE&amp;to=0x29152c850456899A78178622B6543BBFfC224495&amp;txHash=0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&amp;type=ETH&amp;value=1.000000000000000000&amp;withdrawID=7Cab38EA42538f4D8C2
 </code></p></li>
 <li><p>使用HMAC-SHA256对消息进行签名。如果 AppSecret 是 <code>exzYZT8IubM9Jxq1PWU5QjZ0JFP81bvCmlf1fFjW0b87Zr6eAMdofeYlhAMZxPzo</code>, 那么sign param 如下:
 </br>
@@ -2540,7 +2545,7 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 </ol>
 <h1 id='8ba46c43fe-2'>签名</h1>
 <ol>
-<li><p>G获取当前的时间戳（秒）和nonce（随机字符串）。请确保时间戳错误不超过5分钟，nonce不在10分钟内重复。</p></li>
+<li><p>获取当前的时间戳（毫秒）和nonce（随机字符串）。请确保时间戳错误不超过5分钟，nonce不在10分钟内重复。</p></li>
 <li><p>形成一个字符串消息（排序），其中包含数据prarams，上述时间戳和随机字符串。</p>
 
 <p>如果body params是: 
@@ -2554,7 +2559,7 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 <p>消息字符串如下:
 </br>
 <code>
-mode=auto&amp;nonce=15833762841261615239762485&amp;timestamp=1583376284
+mode=auto&amp;nonce=15833762841261615239762485&amp;timestamp=1583376284000
 </code></p></li>
 <li><p>使用HMAC-SHA256对消息进行签名。如果 AppSecret 是 <code>yeTJ3EnOkyQQEjhTMVqn165Dqjp43bhTwXLIv25Ycdu8qwDOyqpa0WV54C6sO4HW</code>, 那么sign param 如下:
 </br>
