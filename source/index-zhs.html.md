@@ -794,7 +794,6 @@ addresses[].auditStatus | number | 地址审核状态
 | depositAmount | query | 预存款校验金额 | Yes | string |
 | signAddress | query | 用于签名校验短语的地址 | Yes | string |
 | depositAddress | query | 指定充值地址 | No | string |
-| chainAssetId | query | 链上资产 ID | No | string |
 
 **响应结果**
 
@@ -826,7 +825,6 @@ signPhrase | string | 用于钱包签名验证的待签名短语（提供 signAd
 | signAddress | body | 用于签名的地址 | Yes | string |
 | signPhrase | body | 被签名的短语（从白名单地址预存款校验接口获取） | Yes | string |
 | signResult | body | 签名结果 | Yes | string |
-| chainAssetId | body | 链上资产 ID | No | string |
 
 **响应结果**
 

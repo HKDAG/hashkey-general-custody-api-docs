@@ -796,7 +796,6 @@ addresses[].auditStatus | number | audit status of the address
 | depositAmount | query | deposit amount for pre-verification | Yes | string |
 | signAddress | query | address used to sign the verification phrase | Yes | string |
 | depositAddress | query | specify deposit address | No | string |
-| chainAssetId | query | chain asset id | No | string |
 
 **Response Result**
 
@@ -828,7 +827,6 @@ signPhrase | string | phrase to be signed for wallet signing verification (prese
 | signAddress | body | address used to sign | Yes | string |
 | signPhrase | body | phrase that was signed (obtained from Get Verify Whitelist Address) | Yes | string |
 | signResult | body | signing result / signature | Yes | string |
-| chainAssetId | body | chain asset id | No | string |
 
 **Response Result**
 
