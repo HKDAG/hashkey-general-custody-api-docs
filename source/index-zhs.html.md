@@ -69,7 +69,7 @@ HashKey Custody 有两个用于开发和生产的独立环境。 出于安全考
 
 | 名称 | 位置 | 描述 | 是否必需 | 类型 |
 | ---- | ---------- | ----------- | -------- | ---- |
-| timestamp | query/body | unix timestamp, seconds | Yes | string |
+| timestamp | query/body | unix timestamp, milliseconds | Yes | string |
 | nonce | query/body | nonce, random string, not repeated in 10 minutes | Yes | string |
 | sign | query/body | hex string, sign parameters with HMACSHA256 | Yes | string |
 
@@ -79,7 +79,7 @@ HashKey Custody 有两个用于开发和生产的独立环境。 出于安全考
 
 `
 { 
-  "timestamp": 1583376284,
+  "timestamp": 1583376284000,
   "nonce": "15833762841261615239762485",
   "mode": "auto",
   "sign":"7042a9fd6deea017be7ad76dfb48e4c36feca279819630c870a628f5352c9044"
@@ -89,7 +89,7 @@ HashKey Custody 有两个用于开发和生产的独立环境。 出于安全考
 如果是 GET 请求, url 结构如下:
 
 `
-/api/v1/app/balance/ETH?timestamp=1583374390&nonce=1583374390314165815853245&sign=7c482cf15d9d25772eee2c43bd146c8136472a055b4587b9fb22d02720037875
+/api/v1/app/balance/ETH?timestamp=1583374390000&nonce=1583374390314165815853245&sign=7c482cf15d9d25772eee2c43bd146c8136472a055b4587b9fb22d02720037875
 `
 
 <font size=4> [签名方式](#signature) 类似于 OAuth.</font>
@@ -292,7 +292,7 @@ assets:
 值 | 类型 | 描述
 --------- | ------- | ---------
 network | string | 币种所属网络
-coin | string | 币种名称
+coinName | string | 币种名称
 
 ### 获取钱包余额
 
@@ -364,7 +364,7 @@ balances | array | the wallet balance list
 --------- | ------- | ---------
 balance | string | 币种余额
 money | string | 币种余额对应的美元价值
-name | string | 币种名称
+coinName | string | 币种名称
 price | string | 币种价格(USD)
 outLocked | string | 币种转出锁定余额
 
@@ -389,7 +389,7 @@ data:
     "n": 0,
     "state": "DONE",
     "to": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
-    "txid": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
+    "txHash": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
     "type": "ETH",
     "value": "0.045000000000000000"
   }]
@@ -426,7 +426,7 @@ data:
 | X-App-Key | header | app key | Yes | string |
 | page | query | page, e.g. 1 | Yes | string |
 | amount | query | item count on this page, e.g. 10 | Yes | string |
-| coins | query | coin list, can be empty string | No | string |
+| coinNames | query | coin list, can be empty string | No | string |
 | state | query | order state, can be empty string | No | string |
 | bizType | query | order type, TRANSFER_IN/TRANSFER_OUT/WITHDRAW/DEPOSIT | No | string |
 
@@ -453,12 +453,12 @@ memo | string | memo
 n | number | 订单索引
 state | string | 订单状态
 to | string | 交易输出
-txid | string | 交易哈希
+txHash | string | 交易哈希
 type | string | 网络类型
 value | string | 交易值
 note | string | 订单备注
 message | string | 转账消息
-createdAt | number | 创建时间(unix时间戳, 秒)
+createdAt | number | 创建时间(unix时间戳, 毫秒)
 withdrawID | string | 提币ID
 
 **`state` 状态枚举**
@@ -497,12 +497,12 @@ data:
   "n": 0,
   "state": "DONE",
   "to": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
-  "txid": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
+  "txHash": "0xcfc4cb925c77c2ea10be3c233029fc1f05d0ddffe7396920ddd493544e52933d",
   "type": "ETH",
   "value": "0.045000000000000000",
   "note": "note",
   "message": "",
-  "createdAt": 1569306519,
+  "createdAt": 1569306519000,
   "withdrawID": "7Cab38EA42538f4D8C2"
 }
 ```
@@ -552,12 +552,12 @@ memo | string | memo
 n | number | 订单索引
 state | string | 订单状态
 to | string | 交易输出
-txid | string | 交易哈希
+txHash | string | 交易哈希
 type | string | 网络类型
 value | string | 交易值
 note | string | 订单备注
 message | string | 转账消息
-createdAt | number | 创建时间(unix时间戳, 秒)
+createdAt | number | 创建时间(unix时间戳, 毫秒)
 withdrawID | string | 提币ID
 
 **`state` 状态枚举**
@@ -629,7 +629,7 @@ data:
   "n": 0,
   "state": "INIT",
   "to": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
-  "txid": "",
+  "txHash": "",
   "type": "ETH",
   "value": "0.0450000000"
 }
@@ -650,7 +650,7 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
 | coinName | path | coin type | Yes | string |
-| id | body | withdraw id | Yes | string |
+| withdrawID | body | withdraw id | Yes | string |
 | to | body | receive address | Yes | string |
 | value | body | withdraw amount | Yes | string |
 | memo | body | address memo | No | string |
@@ -673,7 +673,7 @@ memo | string | address memo
 n | number | order index
 state | string | order state
 to | string | transaction output
-txid | string | transaction hash
+txHash | string | transaction hash
 type | string | network type
 value | string | transaction value
 note | string | order note
@@ -698,7 +698,7 @@ data:
   "note": "",
   "state": "DONE",
   "to": "e5dJyVp8R3B1m4o",
-  "txid": "",
+  "txHash": "",
   "type": "ETH",
   "value": "0.01"
 }
@@ -719,7 +719,7 @@ data:
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
 | coinName | path | coin type | Yes | string |
-| id | body | transfer id | Yes | string |
+| transferID | body | transfer id | Yes | string |
 | to | body | receive wallet id | Yes | string |
 | value | body | transfer amount | Yes | string |
 | note | body | transfer note, can be empty string | Yes | string |
@@ -736,11 +736,12 @@ confirmations | number | number of transaction confirmations
 fee | string | fee burnt for the transaction
 from | string | transaction input
 id | string | order id
+transferID | string | transfer id
 memo | string | order note
 n | number | order index
 state | string | order state
 to | string | transaction output
-txid | string | transaction hash
+txHash | string | transaction hash
 value | string | transaction value
 note | string | transfer note
 message | string | transfer message
@@ -770,7 +771,7 @@ message | string | transfer message
 值 | 类型 | 描述
 --------- | ------- | ---------
 addresses | array | 白名单地址列表
-addresses[].coin | string | 币种名称
+addresses[].coinName | string | 币种名称
 addresses[].chainType | string | 链类型
 addresses[].address | string | 白名单地址
 addresses[].auditStatus | number | 地址审核状态
@@ -787,7 +788,7 @@ addresses[].auditStatus | number | 地址审核状态
 | 名称 | 位置 | 描述 | 是否必需 | 类型 |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
-| coin | query | 币种名称，如 USDT | Yes | string |
+| coinName | query | 币种名称，如 USDT | Yes | string |
 | chainType | query | 链类型，如 ETH | Yes | string |
 | address | query | 待校验的钱包地址 | Yes | string |
 | depositAmount | query | 预存款校验金额 | Yes | string |
@@ -799,7 +800,7 @@ addresses[].auditStatus | number | 地址审核状态
 
 值 | 类型 | 描述
 --------- | ------- | ---------
-assetId | string | 币种名称
+coinName | string | 币种名称
 network | string | 链类型
 chainType | string | 区块链网络标识
 depositAddress | string | 充值地址
@@ -820,7 +821,7 @@ signPhrase | string | 用于钱包签名验证的待签名短语（提供 signAd
 | 名称 | 位置 | 描述 | 是否必需 | 类型 |
 | ---- | ---------- | ----------- | -------- | ---- |
 | X-App-Key | header | app key | Yes | string |
-| coin | body | 币种名称，如 USDT | Yes | string |
+| coinName | body | 币种名称，如 USDT | Yes | string |
 | chainType | body | 链类型，如 ETH | Yes | string |
 | signAddress | body | 用于签名的地址 | Yes | string |
 | signPhrase | body | 被签名的短语（从白名单地址预存款校验接口获取） | Yes | string |
@@ -845,7 +846,7 @@ code: 0
 message: success
 data:
 {
-  "timestamp": 1590391287
+  "timestamp": 1590391287000
 }
 ```
 
@@ -864,7 +865,7 @@ data:
 
 值 | 类型 | 描述
 --------- | ------- | ---------
-timestamp | number | current timestamp
+timestamp | number | current timestamp, milliseconds
 
 # 企业 API
 
@@ -961,7 +962,7 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
-  "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
+  "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
   "confirmations": 27,
   "sign": "796dde931a15c98edc3dfdb65a2c2addfde422f217a1f6934be9226542839aa0"
 }
@@ -974,7 +975,7 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
 id | string | 订单ID
 withdrawID | string | 提币ID
 coinName | string | 币种名称
-txid | string | 交易哈希
+txHash | string | 交易哈希
 state | string | 订单状态
 bizType | string | 订单类型
 from | string | 交易输入，提币订单该值为空
@@ -1019,7 +1020,7 @@ FAILED | 订单失败 | 是
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
-  "txid": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
+  "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
   "confirmations": 27
 }
 `
@@ -1027,7 +1028,7 @@ FAILED | 订单失败 | 是
     消息字符串如下:
 </br>
 `
-affirmativeConfirmation=20&bizType=DEPOSIT&block=13721091&coinName=ETH&confirmations=27&fee=0.000000000000000000&from=0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&id=2XB0eKAvj7KvjZDk59zl&memo=&n=0&state=DONE&to=0x29152c850456899A78178622B6543BBFfC224495&txid=0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&type=ETH&value=1.000000000000000000&withdrawID=7Cab38EA42538f4D8C2
+affirmativeConfirmation=20&bizType=DEPOSIT&block=13721091&coinName=ETH&confirmations=27&fee=0.000000000000000000&from=0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072&id=2XB0eKAvj7KvjZDk59zl&memo=&n=0&state=DONE&to=0x29152c850456899A78178622B6543BBFfC224495&txHash=0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59&type=ETH&value=1.000000000000000000&withdrawID=7Cab38EA42538f4D8C2
 `
 
 2. 使用HMAC-SHA256对消息进行签名。如果 AppSecret 是 `exzYZT8IubM9Jxq1PWU5QjZ0JFP81bvCmlf1fFjW0b87Zr6eAMdofeYlhAMZxPzo`, 那么sign param 如下:
@@ -1037,7 +1038,7 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 `
 
 # 签名
-1. G获取当前的时间戳（秒）和nonce（随机字符串）。请确保时间戳错误不超过5分钟，nonce不在10分钟内重复。
+1. 获取当前的时间戳（毫秒）和nonce（随机字符串）。请确保时间戳错误不超过5分钟，nonce不在10分钟内重复。
 
 2. 形成一个字符串消息（排序），其中包含数据prarams，上述时间戳和随机字符串。
 
@@ -1052,7 +1053,7 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
     消息字符串如下:
 </br>
 `
-mode=auto&nonce=15833762841261615239762485&timestamp=1583376284
+mode=auto&nonce=15833762841261615239762485&timestamp=1583376284000
 `
 
 3. 使用HMAC-SHA256对消息进行签名。如果 AppSecret 是 `yeTJ3EnOkyQQEjhTMVqn165Dqjp43bhTwXLIv25Ycdu8qwDOyqpa0WV54C6sO4HW`, 那么sign param 如下:
