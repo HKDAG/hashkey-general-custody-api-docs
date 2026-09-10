@@ -959,7 +959,7 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "withdrawID": "7Cab38EA42538f4D8C2",
   "bizType": "DEPOSIT",
   "coinName": "ETH",
-  "state": "DONE",
+  "state": "REFUND",
   "value": "1.000000000000000000",
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
@@ -988,6 +988,9 @@ to | string | transaction output
 value | string | transaction value
 confirmations | number | number of transaction confirmations
 fee | string | withdraw fee
+refundTxHash | string | refund transaction hash
+appKey | string | app key associated with order 
+appKeyType | string | app key type: hmac/ed25519
 sign | string | hex string, sign parameters with HMACSHA256
 
 **`state` enumeration**

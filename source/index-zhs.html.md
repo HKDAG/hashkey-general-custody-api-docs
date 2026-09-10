@@ -957,13 +957,16 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "withdrawID": "7Cab38EA42538f4D8C2",
   "bizType": "DEPOSIT",
   "coinName": "ETH",
-  "state": "DONE",
+  "state": "REFUND",
   "value": "1.000000000000000000",
   "fee": "0.000000000000000000",
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
   "confirmations": 27,
+  "refundTxHash": "0xc1af1a13a168232961621267b8b385a2fc0cb9931775e422428b0721a87deb60",
+  "appKey":"2qdxl2huznc77qef30utj8eg",
+  "appKeyType":"hmac",
   "sign": "796dde931a15c98edc3dfdb65a2c2addfde422f217a1f6934be9226542839aa0"
 }
 ```
@@ -983,6 +986,9 @@ to | string | 交易输出
 value | string | 交易值
 confirmations | number | 交易确认数
 fee | string | 提现手续费
+refundTxHash | string | 退款交易哈希
+appKey | string | 订单关联的 app key
+appKeyType | string | app key 的 type: hmac/ed25519
 sign | string | 签名
 
 **`state` 状态枚举**
@@ -1021,9 +1027,6 @@ FAILED | 订单失败 | 是
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
-  "refundTxHash": "0xc1af1a13a168232961621267b8b385a2fc0cb9931775e422428b0721a87deb60",
-  "appKey":"2qdxl2huznc77qef30utj8eg",
-  "appKeyType":"hmac",
   "confirmations": 27
 }
 `
