@@ -502,7 +502,8 @@ data:
   "note": "note",
   "message": "",
   "createdAt": 1569306519000,
-  "withdrawID": "7Cab38EA42538f4D8C2"
+  "withdrawID": "7Cab38EA42538f4D8C2",
+  "refundTxHash": ""
 }
 ```
 
@@ -625,6 +626,7 @@ data:
   "from": "",
   "id": "Jd7qbDRa1qM1lxK5Qe2M",
   "withdrawID": "7Cab38EA42538f4D8C2",
+  "refundTxHash": "",
   "memo": "",
   "n": 0,
   "state": "INIT",
@@ -963,6 +965,9 @@ encryptedAppSecret | string | the base64 encoded [AES encrypted](#aes-encryption
   "from": "0xF0706B7Cab38EA42538f4D8C279B6F57ad1d4072",
   "to": "0x29152c850456899A78178622B6543BBFfC224495",
   "txHash": "0x8487e23bbf71f1763e015598283ae891cc5ea8d444f87a0a60a0b5eb7e1a4d59",
+  "refundTxHash": "0xc1af1a13a168232961621267b8b385a2fc0cb9931775e422428b0721a87deb60",
+  "appKey":"2qdxl2huznc77qef30utj8eg",
+  "appKeyType":"hmac",
   "confirmations": 27,
   "sign": "fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3"
 }
