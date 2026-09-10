@@ -423,6 +423,25 @@
           </li>
           <li>
             <a href="#signature-2" class="toc-h1 toc-link" data-title="Signature">Signature</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#hmac-sha256-signature" class="toc-h2 toc-link" data-title="HMAC-SHA256 Signature">HMAC-SHA256 Signature</a>
+                  </li>
+                  <li>
+                    <a href="#ed25519-signature" class="toc-h2 toc-link" data-title="Ed25519 Signature">Ed25519 Signature</a>
+                      <ul class="toc-list-h3">
+                          <li>
+                            <a href="#key-formats" class="toc-h3 toc-link" data-title="Key Formats">Key Formats</a>
+                          </li>
+                          <li>
+                            <a href="#signing-steps" class="toc-h3 toc-link" data-title="Signing Steps">Signing Steps</a>
+                          </li>
+                          <li>
+                            <a href="#python-example" class="toc-h3 toc-link" data-title="Python Example">Python Example</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#aes-encryption" class="toc-h1 toc-link" data-title="AES Encryption">AES Encryption</a>
@@ -533,7 +552,7 @@
 <tr>
 <td>sign</td>
 <td>query/body</td>
-<td>hex string, sign parameters with HMACSHA256</td>
+<td>signature string, sign parameters with HMAC-SHA256 or Ed25519 (hex or base64)</td>
 <td>Yes</td>
 <td>string</td>
 </tr>
@@ -2530,6 +2549,10 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 </code></p></li>
 </ol>
 <h1 id='signature-2'>Signature</h1>
+<p>HashKey Custody API supports two signature mechanisms for verifying request authenticity:
+- <strong>HMAC-SHA256 (Default)</strong>: Uses a symmetric secret (<code>AppSecret</code> or <code>CompanySecret</code>) shared between client and server.
+- <strong>Ed25519</strong>: Uses asymmetric Ed25519 cryptography. The client signs requests using their Ed25519 private key, and the server verifies signatures using the registered Ed25519 public key.</p>
+<h2 id='hmac-sha256-signature'>HMAC-SHA256 Signature</h2>
 <ol>
 <li><p>Get the current timestamp (milliseconds) and the nonce (random string). Please make sure the timestamp error not exceed 5 minutes and the nonce not repeated in 10 minutes.</p></li>
 <li><p>Form a String message (sorted) that contains data prarams, the timestamp and nonce above. </p>
@@ -2554,7 +2577,198 @@ mode=auto&amp;nonce=15833762841261615239762485&amp;timestamp=1583376284000
 </code></p></li>
 <li><p>Send request as the same format as described in <a href="#general-structure">General Structure</a>.</p></li>
 </ol>
-<h1 id='aes-encryption'>AES Encryption</h1>
+<h2 id='ed25519-signature'>Ed25519 Signature</h2><div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># Example: Sending a signed POST request</span>
+curl <span class="nt">-X</span> POST <span class="s2">"http://127.0.0.1:8092/api/v1/app"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"X-App-Key: 52u036rjmnd5qtwc74vohpj3"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "timestamp": 1583376284000,
+    "nonce": "15833762841261615239762485",
+    "mode": "auto",
+    "sign": "61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e"
+  }'</span>
+</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"crypto/ed25519"</span>
+    <span class="s">"encoding/hex"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sort"</span>
+    <span class="s">"strings"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">buildMsg</span><span class="p">(</span><span class="n">params</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{})</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="n">keys</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">params</span> <span class="p">{</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">sort</span><span class="o">.</span><span class="n">Strings</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+    <span class="n">pairs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">k</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">keys</span> <span class="p">{</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s=%v"</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="s">"&amp;"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">params</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+        <span class="s">"httpMethod"</span><span class="o">:</span> <span class="s">"POST"</span><span class="p">,</span>
+        <span class="s">"httpPath"</span><span class="o">:</span>   <span class="s">"/api/v1/app"</span><span class="p">,</span>
+        <span class="s">"mode"</span><span class="o">:</span>       <span class="s">"auto"</span><span class="p">,</span>
+        <span class="s">"nonce"</span><span class="o">:</span>      <span class="s">"15833762841261615239762485"</span><span class="p">,</span>
+        <span class="s">"timestamp"</span><span class="o">:</span>  <span class="kt">int64</span><span class="p">(</span><span class="m">1583376284000</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">msgStr</span> <span class="o">:=</span> <span class="n">buildMsg</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="c">// 32-byte seed or 64-byte private key hex</span>
+    <span class="n">seed</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">hex</span><span class="o">.</span><span class="n">DecodeString</span><span class="p">(</span><span class="s">"0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20"</span><span class="p">)</span>
+    <span class="n">privKey</span> <span class="o">:=</span> <span class="n">ed25519</span><span class="o">.</span><span class="n">NewKeyFromSeed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">signature</span> <span class="o">:=</span> <span class="n">ed25519</span><span class="o">.</span><span class="n">Sign</span><span class="p">(</span><span class="n">privKey</span><span class="p">,</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">(</span><span class="n">msgStr</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"sign:"</span><span class="p">,</span> <span class="n">hex</span><span class="o">.</span><span class="n">EncodeToString</span><span class="p">(</span><span class="n">signature</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>When using an Ed25519 API key (<code>keyType = &quot;ed25519&quot;</code>), API requests must be signed with the client&#39;s Ed25519 private key, and the server verifies signatures using the registered Ed25519 public key.</p>
+<h3 id='key-formats'>Key Formats</h3>
+<ul>
+<li><strong>Public Key</strong> (registered on the server):
+
+<ul>
+<li>32-byte Hex string (64 characters)</li>
+</ul></li>
+<li><strong>Private Key</strong> (retained by client):
+
+<ul>
+<li>32-byte seed or 64-byte private key in Hex (64 or 128 characters)</li>
+</ul></li>
+</ul>
+<h3 id='signing-steps'>Signing Steps</h3>
+<ol>
+<li><p><strong>Prepare Parameters</strong>:
+Collect all request parameters (body parameters for POST/PUT/PATCH, or query parameters for GET, excluding the <code>sign</code> parameter itself). Add the following system parameters:</p>
+
+<ul>
+<li><code>timestamp</code>: Current Unix timestamp in milliseconds. Please make sure the timestamp error does not exceed 5 minutes.</li>
+<li><code>nonce</code>: Random string, not repeated in 10 minutes.</li>
+<li><code>httpMethod</code>: The HTTP request method in uppercase (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>).</li>
+<li><code>httpPath</code>: The URL path of the request endpoint (e.g., <code>/api/v1/app</code>, <code>/api/v1/app/balance/ETH</code>).</li>
+</ul></li>
+<li><p><strong>Form a String Message (Sorted)</strong>:
+Sort all parameter keys (including business parameters, <code>timestamp</code>, <code>nonce</code>, <code>httpMethod</code>, and <code>httpPath</code>) in ASCII alphabetical order. Format each key-value pair as <code>key=value</code>, and concatenate them with <code>&amp;</code>. Nested maps and arrays are recursively sorted and formatted with the same rules.</p></li>
+</ol>
+
+<p><strong>Example 1: POST Request</strong></p>
+
+<p>Endpoint: <code>POST /api/v1/app</code></p>
+
+<p>Body parameters:
+</br>
+<code>
+{
+  &quot;mode&quot;: &quot;auto&quot;
+}
+</code></p>
+
+<p>Parameters included for signature calculation:
+   - <code>httpMethod</code>: <code>POST</code>
+   - <code>httpPath</code>: <code>/api/v1/app</code>
+   - <code>mode</code>: <code>auto</code>
+   - <code>nonce</code>: <code>15833762841261615239762485</code>
+   - <code>timestamp</code>: <code>1583376284000</code></p>
+
+<p>The message string looks like this:
+</br>
+<code>
+httpMethod=POST&amp;httpPath=/api/v1/app&amp;mode=auto&amp;nonce=15833762841261615239762485&amp;timestamp=1583376284000
+</code></p>
+
+<p><strong>Example 2: GET Request</strong></p>
+
+<p>Endpoint: <code>GET /api/v1/app/balance/ETH</code></p>
+
+<p>Parameters included for signature calculation:
+   - <code>httpMethod</code>: <code>GET</code>
+   - <code>httpPath</code>: <code>/api/v1/app/balance/ETH</code>
+   - <code>nonce</code>: <code>1583374390314165815853245</code>
+   - <code>timestamp</code>: <code>1583374390000</code></p>
+
+<p>The message string looks like this:
+</br>
+<code>
+httpMethod=GET&amp;httpPath=/api/v1/app/balance/ETH&amp;nonce=1583374390314165815853245&amp;timestamp=1583374390000
+</code></p>
+
+<ol>
+<li><strong>Sign with Ed25519 Private Key</strong>:
+Sign the UTF-8 bytes of the constructed message string with the Ed25519 private key:
+<code>signature = ed25519.Sign(privateKey, []byte(message))</code></li>
+</ol>
+
+<p>Supported signature formats for the <code>sign</code> parameter:
+   - 128-character lowercase Hex string (64 bytes) [Recommended]
+   - 64-byte Base64 string (Standard or URL-safe)</p>
+
+<p>Given the sample Ed25519 private key seed:
+   <code>0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20</code>
+   (Corresponding public key: <code>79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664</code>)</p>
+
+<ul>
+<li>For Example 1 (POST), the <code>sign</code> parameter is:
+</br>
+<code>
+61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e
+</code></li>
+<li>For Example 2 (GET), the <code>sign</code> parameter is:
+</br>
+<code>
+e3d862ed6cd39a23eab90503bce1009c960620edbdfb0ccf05153d94bafb35d3e518010bda81f87991656da2b9fa82ca71ec3794f4829ab60d4f3ca61a195304
+</code></li>
+</ul>
+
+<ol>
+<li><p><strong>Send the Request</strong>:</p>
+
+<ul>
+<li>For POST requests, include <code>sign</code>, <code>timestamp</code>, <code>nonce</code>, and business parameters in the JSON request body:
+</br>
+<code>
+{
+&quot;timestamp&quot;: 1583376284000,
+&quot;nonce&quot;: &quot;15833762841261615239762485&quot;,
+&quot;mode&quot;: &quot;auto&quot;,
+&quot;sign&quot;: &quot;61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e&quot;
+}
+</code></li>
+<li>For GET requests, pass <code>sign</code>, <code>timestamp</code>, and <code>nonce</code> as query parameters:
+</br>
+<code>
+/api/v1/app/balance/ETH?timestamp=1583374390000&amp;nonce=1583374390314165815853245&amp;sign=e3d862ed6cd39a23eab90503bce1009c960620edbdfb0ccf05153d94bafb35d3e518010bda81f87991656da2b9fa82ca71ec3794f4829ab60d4f3ca61a195304
+</code></li>
+<li>Include <code>X-App-Key</code> (or <code>X-Company-Key</code>) in the HTTP request headers.</li>
+</ul></li>
+<li><p><strong>Response Signature</strong>:
+Unlike HMAC-SHA256 keys, the server does not return a <code>sign</code> field in the response when an Ed25519 key is used.</p></li>
+</ol>
+<h3 id='python-example'>Python Example</h3>
+<p>An example of Ed25519 signing using the standard <code>cryptography</code> library in Python:</p>
+<div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.asymmetric</span> <span class="kn">import</span> <span class="n">ed25519</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"httpMethod"</span><span class="p">:</span> <span class="s">"POST"</span><span class="p">,</span>
+    <span class="s">"httpPath"</span><span class="p">:</span> <span class="s">"/api/v1/app"</span><span class="p">,</span>
+    <span class="s">"mode"</span><span class="p">:</span> <span class="s">"auto"</span><span class="p">,</span>
+    <span class="s">"nonce"</span><span class="p">:</span> <span class="s">"15833762841261615239762485"</span><span class="p">,</span>
+    <span class="s">"timestamp"</span><span class="p">:</span> <span class="mi">1583376284000</span>
+<span class="p">}</span>
+
+<span class="c1"># 1. Build sorted message string
+</span><span class="n">msg_str</span> <span class="o">=</span> <span class="s">"&amp;"</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s">=</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s">"</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">params</span><span class="p">.</span><span class="n">keys</span><span class="p">()))</span>
+
+<span class="c1"># 2. Sign with Ed25519 private key (from 32-byte seed)
+</span><span class="n">seed</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s">"0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20"</span><span class="p">)</span>
+<span class="n">priv_key</span> <span class="o">=</span> <span class="n">ed25519</span><span class="p">.</span><span class="n">Ed25519PrivateKey</span><span class="p">.</span><span class="n">from_private_bytes</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">signature</span> <span class="o">=</span> <span class="n">priv_key</span><span class="p">.</span><span class="n">sign</span><span class="p">(</span><span class="n">msg_str</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">"utf-8"</span><span class="p">)).</span><span class="nb">hex</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"sign:"</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
+</code></pre></div><h1 id='aes-encryption'>AES Encryption</h1>
 <p>The encryption has two parts: key and iv. The key is sha256(TeamSecret). The iv is a random bytes that length is 16. An example of encrypting appSecret written by python.</p>
 <div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
