@@ -71,7 +71,7 @@ This is the general request structure for verifing the request by server.
 | ---- | ---------- | ----------- | -------- | ---- |
 | timestamp | query/body | unix timestamp, milliseconds | Yes | string |
 | nonce | query/body | nonce, random string, not repeated in 10 minutes | Yes | string |
-| sign | query/body | hex string, sign parameters with HMACSHA256 | Yes | string |
+| sign | query/body | signature string, sign parameters with HMAC-SHA256 or Ed25519 (hex or base64) | Yes | string |
 
 The parameters `timestamp`, `nonce` and `sign` are located in query for GET requests, but located in the body for POST requests.
 
@@ -1038,6 +1038,13 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 `
 
 # Signature
+
+HashKey Custody API supports two signature mechanisms for verifying request authenticity:
+- **HMAC-SHA256 (Default)**: Uses a symmetric secret (`AppSecret` or `CompanySecret`) shared between client and server.
+- **Ed25519**: Uses asymmetric Ed25519 cryptography. The client signs requests using their Ed25519 private key, and the server verifies signatures using the registered Ed25519 public key.
+
+## HMAC-SHA256 Signature
+
 1. Get the current timestamp (milliseconds) and the nonce (random string). Please make sure the timestamp error not exceed 5 minutes and the nonce not repeated in 10 minutes.
 
 2. Form a String message (sorted) that contains data prarams, the timestamp and nonce above. 
@@ -1063,6 +1070,194 @@ mode=auto&nonce=15833762841261615239762485&timestamp=1583376284000
 `
 
 4. Send request as the same format as described in [General Structure](#general-structure).
+
+## Ed25519 Signature
+
+```shell
+# Example: Sending a signed POST request
+curl -X POST "http://127.0.0.1:8092/api/v1/app" \
+  -H "Content-Type: application/json" \
+  -H "X-App-Key: 52u036rjmnd5qtwc74vohpj3" \
+  -d '{
+    "timestamp": 1583376284000,
+    "nonce": "15833762841261615239762485",
+    "mode": "auto",
+    "sign": "61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e"
+  }'
+```
+
+```go
+package main
+
+import (
+	"crypto/ed25519"
+	"encoding/hex"
+	"fmt"
+	"sort"
+	"strings"
+)
+
+func buildMsg(params map[string]interface{}) string {
+	keys := make([]string, 0, len(params))
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	pairs := make([]string, 0, len(keys))
+	for _, k := range keys {
+		pairs = append(pairs, fmt.Sprintf("%s=%v", k, params[k]))
+	}
+	return strings.Join(pairs, "&")
+}
+
+func main() {
+	params := map[string]interface{}{
+		"httpMethod": "POST",
+		"httpPath":   "/api/v1/app",
+		"mode":       "auto",
+		"nonce":      "15833762841261615239762485",
+		"timestamp":  int64(1583376284000),
+	}
+	msgStr := buildMsg(params)
+
+	// 32-byte seed or 64-byte private key hex
+	seed, _ := hex.DecodeString("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20")
+	privKey := ed25519.NewKeyFromSeed(seed)
+	signature := ed25519.Sign(privKey, []byte(msgStr))
+	fmt.Println("sign:", hex.EncodeToString(signature))
+}
+```
+
+When using an Ed25519 API key (`keyType = "ed25519"`), API requests must be signed with the client's Ed25519 private key, and the server verifies signatures using the registered Ed25519 public key.
+
+### Key Formats
+
+- **Public Key** (registered on the server):
+  - 32-byte Hex string (64 characters)
+- **Private Key** (retained by client):
+  - 32-byte seed or 64-byte private key in Hex (64 or 128 characters)
+
+### Signing Steps
+
+1. **Prepare Parameters**:
+   Collect all request parameters (body parameters for POST/PUT/PATCH, or query parameters for GET, excluding the `sign` parameter itself). Add the following system parameters:
+   - `timestamp`: Current Unix timestamp in milliseconds. Please make sure the timestamp error does not exceed 5 minutes.
+   - `nonce`: Random string, not repeated in 10 minutes.
+   - `httpMethod`: The HTTP request method in uppercase (`GET`, `POST`, `PUT`, `DELETE`).
+   - `httpPath`: The URL path of the request endpoint (e.g., `/api/v1/app`, `/api/v1/app/balance/ETH`).
+
+2. **Form a String Message (Sorted)**:
+   Sort all parameter keys (including business parameters, `timestamp`, `nonce`, `httpMethod`, and `httpPath`) in ASCII alphabetical order. Format each key-value pair as `key=value`, and concatenate them with `&`. Nested maps and arrays are recursively sorted and formatted with the same rules.
+
+   **Example 1: POST Request**
+
+   Endpoint: `POST /api/v1/app`
+
+   Body parameters:
+</br>
+`
+{
+  "mode": "auto"
+}
+`
+
+   Parameters included for signature calculation:
+   - `httpMethod`: `POST`
+   - `httpPath`: `/api/v1/app`
+   - `mode`: `auto`
+   - `nonce`: `15833762841261615239762485`
+   - `timestamp`: `1583376284000`
+
+   The message string looks like this:
+</br>
+`
+httpMethod=POST&httpPath=/api/v1/app&mode=auto&nonce=15833762841261615239762485&timestamp=1583376284000
+`
+
+   **Example 2: GET Request**
+
+   Endpoint: `GET /api/v1/app/balance/ETH`
+
+   Parameters included for signature calculation:
+   - `httpMethod`: `GET`
+   - `httpPath`: `/api/v1/app/balance/ETH`
+   - `nonce`: `1583374390314165815853245`
+   - `timestamp`: `1583374390000`
+
+   The message string looks like this:
+</br>
+`
+httpMethod=GET&httpPath=/api/v1/app/balance/ETH&nonce=1583374390314165815853245&timestamp=1583374390000
+`
+
+3. **Sign with Ed25519 Private Key**:
+   Sign the UTF-8 bytes of the constructed message string with the Ed25519 private key:
+   `signature = ed25519.Sign(privateKey, []byte(message))`
+
+   Supported signature formats for the `sign` parameter:
+   - 128-character lowercase Hex string (64 bytes) [Recommended]
+   - 64-byte Base64 string (Standard or URL-safe)
+
+   Given the sample Ed25519 private key seed:
+   `0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20`
+   (Corresponding public key: `79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664`)
+
+   - For Example 1 (POST), the `sign` parameter is:
+</br>
+`
+61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e
+`
+   - For Example 2 (GET), the `sign` parameter is:
+</br>
+`
+e3d862ed6cd39a23eab90503bce1009c960620edbdfb0ccf05153d94bafb35d3e518010bda81f87991656da2b9fa82ca71ec3794f4829ab60d4f3ca61a195304
+`
+
+4. **Send the Request**:
+   - For POST requests, include `sign`, `timestamp`, `nonce`, and business parameters in the JSON request body:
+</br>
+`
+{
+  "timestamp": 1583376284000,
+  "nonce": "15833762841261615239762485",
+  "mode": "auto",
+  "sign": "61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e"
+}
+`
+   - For GET requests, pass `sign`, `timestamp`, and `nonce` as query parameters:
+</br>
+`
+/api/v1/app/balance/ETH?timestamp=1583374390000&nonce=1583374390314165815853245&sign=e3d862ed6cd39a23eab90503bce1009c960620edbdfb0ccf05153d94bafb35d3e518010bda81f87991656da2b9fa82ca71ec3794f4829ab60d4f3ca61a195304
+`
+   - Include `X-App-Key` (or `X-Company-Key`) in the HTTP request headers.
+
+5. **Response Signature**:
+   Unlike HMAC-SHA256 keys, the server does not return a `sign` field in the response when an Ed25519 key is used.
+
+### Python Example
+
+An example of Ed25519 signing using the standard `cryptography` library in Python:
+
+```python
+from cryptography.hazmat.primitives.asymmetric import ed25519
+
+params = {
+    "httpMethod": "POST",
+    "httpPath": "/api/v1/app",
+    "mode": "auto",
+    "nonce": "15833762841261615239762485",
+    "timestamp": 1583376284000
+}
+
+# 1. Build sorted message string
+msg_str = "&".join(f"{k}={params[k]}" for k in sorted(params.keys()))
+
+# 2. Sign with Ed25519 private key (from 32-byte seed)
+seed = bytes.fromhex("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20")
+priv_key = ed25519.Ed25519PrivateKey.from_private_bytes(seed)
+signature = priv_key.sign(msg_str.encode("utf-8")).hex()
+print("sign:", signature)
+```
 
 # AES Encryption
 The encryption has two parts: key and iv. The key is sha256(TeamSecret). The iv is a random bytes that length is 16. An example of encrypting appSecret written by python.

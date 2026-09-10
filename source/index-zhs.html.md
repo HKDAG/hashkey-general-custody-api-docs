@@ -71,7 +71,7 @@ HashKey Custody 有两个用于开发和生产的独立环境。 出于安全考
 | ---- | ---------- | ----------- | -------- | ---- |
 | timestamp | query/body | unix timestamp, milliseconds | Yes | string |
 | nonce | query/body | nonce, random string, not repeated in 10 minutes | Yes | string |
-| sign | query/body | hex string, sign parameters with HMACSHA256 | Yes | string |
+| sign | query/body | 签名字符串，使用 HMAC-SHA256 或 Ed25519（hex 或 base64）对参数签名 | Yes | string |
 
 参数 `timestamp`， `nonce` 和 `sign` 位于GET请求的query中, 但位于POST请求的body中。
 
@@ -1036,6 +1036,13 @@ fb0f53f33bba4cfa4bcb2c81e976bbe817633ba87a9904b6c3de293da3805cb3
 `
 
 # 签名
+
+HashKey Custody API 支持两种签名机制来校验请求的真实性和合法性：
+- **HMAC-SHA256 (默认)**: 使用客户端与服务端共享的对称密钥（`AppSecret` 或 `CompanySecret`）。
+- **Ed25519**: 使用非对称 Ed25519 加密算法。客户端使用自己的 Ed25519 私钥对请求进行签名，服务端使用已绑定的 Ed25519 公钥进行验签。
+
+## HMAC-SHA256 签名
+
 1. 获取当前的时间戳（毫秒）和nonce（随机字符串）。请确保时间戳错误不超过5分钟，nonce不在10分钟内重复。
 
 2. 形成一个字符串消息（排序），其中包含数据prarams，上述时间戳和随机字符串。
@@ -1061,6 +1068,192 @@ mode=auto&nonce=15833762841261615239762485&timestamp=1583376284000
 `
 
 4. 发送请求的格式与 [一般结构](#general-structure)中所述的相同。
+
+## Ed25519 签名
+
+```shell
+# 示例：发送带 Ed25519 签名的 POST 请求
+curl -X POST "http://127.0.0.1:8092/api/v1/app" \
+  -H "Content-Type: application/json" \
+  -H "X-App-Key: 52u036rjmnd5qtwc74vohpj3" \
+  -d '{
+    "timestamp": 1583376284000,
+    "nonce": "15833762841261615239762485",
+    "mode": "auto",
+    "sign": "61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e"
+  }'
+```
+
+```go
+package main
+
+import (
+	"crypto/ed25519"
+	"encoding/hex"
+	"fmt"
+	"sort"
+	"strings"
+)
+
+func buildMsg(params map[string]interface{}) string {
+	keys := make([]string, 0, len(params))
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	pairs := make([]string, 0, len(keys))
+	for _, k := range keys {
+		pairs = append(pairs, fmt.Sprintf("%s=%v", k, params[k]))
+	}
+	return strings.Join(pairs, "&")
+}
+
+func main() {
+	params := map[string]interface{}{
+		"httpMethod": "POST",
+		"httpPath":   "/api/v1/app",
+		"mode":       "auto",
+		"nonce":      "15833762841261615239762485",
+		"timestamp":  int64(1583376284000),
+	}
+	msgStr := buildMsg(params)
+
+	// 32 字节 seed 或 64 字节私钥 hex
+	seed, _ := hex.DecodeString("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20")
+	privKey := ed25519.NewKeyFromSeed(seed)
+	signature := ed25519.Sign(privKey, []byte(msgStr))
+	fmt.Println("sign:", hex.EncodeToString(signature))
+}
+```
+
+
+对于使用 Ed25519 类型密钥（`keyType = "ed25519"`）的应用/钱包，API 请求需要使用客户端的 Ed25519 私钥进行签名，服务端使用已绑定的 Ed25519 公钥验证签名。
+
+### 密钥格式支持
+
+- **公钥**（创建钱包时提供给服务端或在后台配置）：
+  - 32 字节十六进制（Hex）字符串（64 个字符）
+- **私钥**（客户端自行安全保管）：
+  - 32 字节 Seed 或 64 字节私钥的 Hex 字符串（64 或 128 个字符）
+
+### 签名步骤
+
+1. **准备待签名参数**：
+   收集所有请求业务参数（POST/PUT/PATCH 为请求体参数，GET 为查询参数，排除 `sign` 自身），并添加以下系统参数：
+   - `timestamp`：当前 Unix 毫秒时间戳，请确保与服务器时间偏差在 5 分钟以内。
+   - `nonce`：随机字符串，10 分钟内不得重复。
+   - `httpMethod`：大写 HTTP 请求方法（`GET`、`POST`、`PUT`、`DELETE` 等）。
+   - `httpPath`：请求的接口路径（例如 `/api/v1/app`、`/api/v1/app/balance/ETH`）。
+
+2. **生成待签名字符串（排序）**：
+   将包含业务参数、`timestamp`、`nonce`、`httpMethod` 和 `httpPath` 在内的所有参数按参数名的 ASCII 字典序升序排序。每个键值对按 `key=value` 格式拼接，并以 `&` 连接。如果参数包含嵌套对象或数组，将按相同规则递归处理。
+
+   **示例 1：POST 请求**
+
+   请求接口：`POST /api/v1/app`
+
+   请求体参数：
+</br>
+`
+{
+  "mode": "auto"
+}
+`
+
+   参与签名的参数：
+   - `httpMethod`: `POST`
+   - `httpPath`: `/api/v1/app`
+   - `mode`: `auto`
+   - `nonce`: `15833762841261615239762485`
+   - `timestamp`: `1583376284000`
+
+   待签名字符串如下：
+</br>
+`
+httpMethod=POST&httpPath=/api/v1/app&mode=auto&nonce=15833762841261615239762485&timestamp=1583376284000
+`
+
+   **示例 2：GET 请求**
+
+   请求接口：`GET /api/v1/app/balance/ETH`
+
+   参与签名的参数：
+   - `httpMethod`: `GET`
+   - `httpPath`: `/api/v1/app/balance/ETH`
+   - `nonce`: `1583374390314165815853245`
+   - `timestamp`: `1583374390000`
+
+   待签名字符串如下：
+</br>
+`
+httpMethod=GET&httpPath=/api/v1/app/balance/ETH&nonce=1583374390314165815853245&timestamp=1583374390000
+`
+
+3. **使用 Ed25519 私钥签名**：
+   使用 Ed25519 私钥对待签名字符串的 UTF-8 字节进行签名（`ed25519.Sign`）。生成的 64 字节签名可通过以下格式填入 `sign` 参数：
+   - 128 字符小写 Hex 字符串 [推荐]
+   - 64 字节 Base64 编码字符串（标准或 URL-safe）
+
+   假设使用的私钥种子（Seed）为：
+   `0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20`
+   （对应的公钥为：`79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664`）
+
+   - 示例 1（POST 请求）生成的 `sign` 为：
+</br>
+`
+61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e
+`
+   - 示例 2（GET 请求）生成的 `sign` 为：
+</br>
+`
+e3d862ed6cd39a23eab90503bce1009c960620edbdfb0ccf05153d94bafb35d3e518010bda81f87991656da2b9fa82ca71ec3794f4829ab60d4f3ca61a195304
+`
+
+4. **发送请求**：
+   - 对于 POST 请求，将 `sign`、`timestamp`、`nonce` 和业务参数放在 JSON 请求体中发送：
+</br>
+`
+{
+  "timestamp": 1583376284000,
+  "nonce": "15833762841261615239762485",
+  "mode": "auto",
+  "sign": "61da2bc88e299884bab5e84c6d8d4cf4433ef41ca7db652322052ad9718345eaaad8750d3a1a6030c216be3d37a6f979d9bb902c08f48bf50bcc31839a15920e"
+}
+`
+   - 对于 GET 请求，将 `sign`、`timestamp`、`nonce` 作为 URL 查询参数发送：
+</br>
+`
+/api/v1/app/balance/ETH?timestamp=1583374390000&nonce=1583374390314165815853245&sign=e3d862ed6cd39a23eab90503bce1009c960620edbdfb0ccf05153d94bafb35d3e518010bda81f87991656da2b9fa82ca71ec3794f4829ab60d4f3ca61a195304
+`
+   - 在 HTTP 请求头中添加 `X-App-Key`（或 `X-Company-Key`）。
+
+5. **响应签名说明**：
+   与 HMAC-SHA256 密钥不同，使用 Ed25519 密钥发送的 API 请求，服务端返回的响应中不包含 `sign` 签名字段。
+
+### Python 示例
+
+使用 Python 标准 `cryptography` 库进行 Ed25519 签名的示例：
+
+```python
+from cryptography.hazmat.primitives.asymmetric import ed25519
+
+params = {
+    "httpMethod": "POST",
+    "httpPath": "/api/v1/app",
+    "mode": "auto",
+    "nonce": "15833762841261615239762485",
+    "timestamp": 1583376284000
+}
+
+# 1. 字典序排序拼接待签名字符串
+msg_str = "&".join(f"{k}={params[k]}" for k in sorted(params.keys()))
+
+# 2. 使用 Ed25519 私钥（32 字节 Seed）签名
+seed = bytes.fromhex("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20")
+priv_key = ed25519.Ed25519PrivateKey.from_private_bytes(seed)
+signature = priv_key.sign(msg_str.encode("utf-8")).hex()
+print("sign:", signature)
+```
 
 # AES 加密
 加密有两部分: key 和 iv。 key 是 sha256(CompanySecret)， iv 是一个长度为16的随机字节。以下为用python编写的加密appSecret的例子。
